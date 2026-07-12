@@ -23,6 +23,20 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 .hdr-link{color:#93aec4;font-size:12px;font-family:-apple-system,sans-serif;text-decoration:none;transition:color .12s}
 .hdr-link:hover{color:#fff}
 @media (max-width:720px){.hdr-link{display:none}}
+.about-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:200}
+.about-modal{background:#fff;border-radius:12px;padding:26px 30px;width:560px;max-width:94vw;max-height:88vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.22)}
+.about-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.about-title{font-size:18px;font-weight:700;color:#1d3a52}
+.about-close{background:none;border:none;font-size:19px;color:#888780;cursor:pointer;line-height:1;padding:0 4px}
+.about-close:hover{color:#1d3a52}
+.about-sec{margin-bottom:14px}
+.about-sec h4{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#0F6E56;margin-bottom:5px;font-family:-apple-system,sans-serif}
+.about-sec p{font-size:13px;color:#3d3d3a;line-height:1.65;font-family:-apple-system,sans-serif;margin-bottom:6px}
+.about-links{display:flex;flex-direction:column;gap:7px;border-top:1px solid #e8e6df;padding-top:14px;margin-bottom:12px}
+.about-links a{font-size:13px;color:#1d3a52;font-family:-apple-system,sans-serif;text-decoration:none}
+.about-links a:hover{text-decoration:underline}
+.about-foot{font-size:11.5px;color:#888780;font-family:-apple-system,sans-serif}
+.about-foot a{color:#1d3a52}
 .body{display:flex;flex:1;overflow:hidden}
 .sidebar{width:280px;background:#fff;border-right:1px solid #e0ddd6;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
 .sb-head{padding:16px 16px 10px;border-bottom:1px solid #e0ddd6}
@@ -110,9 +124,39 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
     <div style="color:#93aec4;font-family:-apple-system,sans-serif;font-size:11.5px" id="hdr-sub">Every US hospital's finances, in plain English · Free · Runs in your browser</div>
   </div>
   <div style="display:flex;align-items:center;gap:16px">
-    <a class="hdr-link" href="https://data.cms.gov/provider-compliance/cost-reports/hospital-provider-cost-report" target="_blank" rel="noopener">Data source</a>
-    <a class="hdr-link" href="https://github.com/alexdoster/askcostreports" target="_blank" rel="noopener">GitHub</a>
+    <a class="hdr-link" href="#" onclick="showAbout();return false">About the data</a>
     <div class="pill loading" id="status-pill">● Loading...</div>
+  </div>
+</div>
+
+<div class="about-overlay" id="about-overlay" style="display:none" onclick="if(event.target===this)hideAbout()">
+  <div class="about-modal">
+    <div class="about-head">
+      <div class="about-title">About the data</div>
+      <button class="about-close" onclick="hideAbout()">✕</button>
+    </div>
+    <div class="about-sec">
+      <h4>What this is</h4>
+      <p>Every Medicare-certified hospital in the US must file an annual cost report with CMS. It is the only public source of complete financials for every American hospital: income statement, balance sheet, utilization, staffing, and charity care. AskCostReports loads CMS's curated extract — 117 measures per hospital per year — into your browser and lets you query it in plain English.</p>
+    </div>
+    <div class="about-sec">
+      <h4>How fresh it is</h4>
+      <p id="about-fresh">Loading dataset details...</p>
+      <p>Cost reports trail real time by one to two years: hospitals file about five months after their fiscal year ends, and CMS audits and publishes in batches. Every analytics vendor works from these same publications. This app refreshes itself automatically when CMS publishes new data.</p>
+    </div>
+    <div class="about-sec">
+      <h4>Read it like an analyst</h4>
+      <p>Figures are as filed and can be restated later. Fiscal years vary by hospital, so group by report year for trends. Small specialty facilities file alongside general acute-care hospitals — pick peer groups thoughtfully. And the AI can write an imperfect query: every answer shows its work so you can verify before you rely on a number.</p>
+    </div>
+    <div class="about-sec">
+      <h4>Privacy</h4>
+      <p>The dataset loads into your browser and stays there. Your questions and the query results go to the AI to compose answers; the raw data never does. No accounts, no tracking.</p>
+    </div>
+    <div class="about-links">
+      <a href="https://data.cms.gov/provider-compliance/cost-reports/hospital-provider-cost-report" target="_blank" rel="noopener">Source: CMS Hospital Provider Cost Report ↗</a>
+      <a href="https://github.com/alexdoster/askcostreports" target="_blank" rel="noopener">Open source — inspect the code ↗</a>
+    </div>
+    <div class="about-foot">Built by <a href="https://alexdoster.github.io/Portfolio" target="_blank" rel="noopener">Alex Doster</a> · Portland, OR</div>
   </div>
 </div>
 
@@ -302,6 +346,8 @@ async function loadData(setStatus, setBar) {
     `· Source: CMS Hospital Provider Cost Report (public domain)`;
   document.getElementById("hdr-sub").textContent =
     `Every US hospital's finances ${yrs[0]}–${yrs[yrs.length - 1]}, in plain English · Free · Runs in your browser`;
+  document.getElementById("about-fresh").textContent =
+    `Currently loaded: ${yrs[0]}–${yrs[yrs.length - 1]}, ${Number(MANIFEST.total_rows).toLocaleString()} hospital-year filings.`;
 
   setBar(100);
   setStatus("Ready.");
@@ -534,6 +580,8 @@ function newConv() {
   document.getElementById("new-btn").style.display = "none";
 }
 window.onKey = onKey; window.doSend = doSend; window.newConv = newConv;
+window.showAbout = () => { document.getElementById("about-overlay").style.display = "flex"; };
+window.hideAbout = () => { document.getElementById("about-overlay").style.display = "none"; };
 
 // ── Startup: auto-load, no gate ────────────────────────────────
 (async function startup() {
