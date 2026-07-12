@@ -7,7 +7,7 @@
 <meta name="description" content="Ask questions about any US hospital's finances in plain English. Every Medicare cost report, queryable in your browser.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="AskCostReports.com — Ask any US hospital's Medicare cost report">
-<meta property="og:description" content="Every US hospital's finances, in plain English. Free, runs in your browser, every answer shows its SQL. ~6,000 hospitals, 2011-2023.">
+<meta property="og:description" content="Every US hospital's finances, in plain English. Free, runs in your browser, every answer shows its work. ~6,000 hospitals, 2011-2023.">
 <meta property="og:image" content="https://alexdoster.github.io/askcostreports/og.png">
 <meta property="og:url" content="https://askcostreports.com">
 <meta name="twitter:card" content="summary_large_image">
@@ -129,14 +129,14 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
       <button class="cat-btn" data-cat="safetynet" onclick="toggleCat('safetynet','#6B3FA0',this)"><span class="chev">▸</span>Charity Care &amp; Labor</button>
       <div class="q-slot" id="qs-safetynet"></div>
     </div>
-    <div class="sb-hint" id="sb-hint">Pick a category to browse questions, or type your own. Every answer shows the SQL it ran, so you can verify the work.</div>
+    <div class="sb-hint" id="sb-hint">Pick a category to browse questions, or type your own. Every answer shows its work, so you can verify the numbers.</div>
   </div>
 
   <div class="chat-area">
     <div class="messages" id="messages">
       <div class="welcome" id="welcome">
         <h2>Ask any US hospital's Medicare cost report</h2>
-        <p style="margin-bottom:14px">Every Medicare-certified hospital files an annual cost report — the only public source of complete financials for every American hospital. Ask in plain English; the AI writes the SQL, runs it in your browser, and shows its work.</p>
+        <p style="margin-bottom:14px">Every Medicare-certified hospital files an annual cost report — the only public source of complete financials for every American hospital. Ask in plain English; the AI writes the query, runs it in your browser, and shows its work.</p>
         <div style="background:#fff;border:1px solid #e0ddd6;border-radius:8px;padding:14px 18px;text-align:left;margin-bottom:16px;font-family:-apple-system,sans-serif;font-size:13px;color:#3d3d3a;line-height:1.8">
           <div style="font-weight:600;color:#1d3a52;margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.06em">Dataset</div>
           <div id="ds-stats">· Loading dataset details...</div>
@@ -168,7 +168,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
         <textarea class="input-box" id="inp" rows="1" placeholder="Ask about any US hospital's finances..." onkeydown="onKey(event)" disabled></textarea>
         <button class="send-btn" id="send" onclick="doSend()" disabled>Ask →</button>
       </div>
-      <div class="inp-hint">Press Enter to send · Shift+Enter for new line · Answers show their SQL</div>
+      <div class="inp-hint">Press Enter to send · Shift+Enter for new line · Every answer shows its work</div>
     </div>
   </div>
 </div>
@@ -459,9 +459,9 @@ function addAIMsg(sql, queryResult, answer, tokens, questionCost, sessionCost) {
   row.innerHTML = `<div class="ai-avatar">AI</div><div class="bubble ai">
     <div style="margin-bottom:10px">${fmt(answer)}</div>
     <div style="border-top:1px solid #e8e6df;padding-top:8px">
-      <button class="sql-toggle" onclick="var el=document.getElementById('${toggleId}');var shown=el.style.display==='block';el.style.display=shown?'none':'block';this.textContent=shown?'▶ Show the SQL':'▼ Hide the SQL'">▶ Show the SQL</button>
+      <button class="sql-toggle" onclick="var el=document.getElementById('${toggleId}');var shown=el.style.display==='block';el.style.display=shown?'none':'block';this.textContent=shown?'▶ Show the work':'▼ Hide the work'">▶ Show the work</button>
       <div id="${toggleId}" class="sql-collapsible">
-        <div class="sql-label" style="margin-top:6px">SQL (ran locally in your browser)</div>
+        <div class="sql-label" style="margin-top:6px">The query (SQL, ran locally in your browser)</div>
         <div class="sql-block">${esc(sql)}</div>
         <div class="sql-label" style="margin-top:8px">Results (${queryResult.rows.length} row${queryResult.rows.length !== 1 ? "s" : ""})</div>
         ${tableHTML}
