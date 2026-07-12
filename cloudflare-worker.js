@@ -74,6 +74,18 @@ export default {
     });
 
     const data = await anthropicResp.json();
+
+    // Translate upstream failures into honest, friendly states the app can
+    // render. A blown monthly budget is a success signal, not a crash.
+    if (!anthropicResp.ok) {
+      const msg = (data && data.error && data.error.message) || "";
+      if (/credit|billing|balance|spend/i.test(msg)) {
+        return json({ error: { code: "budget", message: "monthly budget reached" } }, 503, cors);
+      }
+      if (anthropicResp.status === 429 || anthropicResp.status === 529) {
+        return json({ error: { code: "busy", message: "high demand" } }, 503, cors);
+      }
+    }
     return json(data, anthropicResp.status, cors);
   },
 };
