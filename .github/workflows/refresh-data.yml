@@ -1,0 +1,34 @@
+name: Refresh cost report data
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Mondays 09:00 UTC
+  workflow_dispatch: {} # manual run button
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install duckdb
+
+      - name: Build all available years
+        run: python pipeline/build_data.py --out data_out
+
+      - name: Publish snapshot to data branch
+        run: |
+          cd data_out
+          git init -b data
+          git config user.name "data-refresh-bot"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Data refresh $(date -u +%Y-%m-%d)"
+          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" data
