@@ -1,0 +1,10 @@
+name = "askcostreports-proxy"
+main = "cloudflare-worker.js"
+compatibility_date = "2026-06-01"
+
+# Native Workers rate limiting: 20 requests/min per client IP.
+[[unsafe.bindings]]
+name = "RATE_LIMITER"
+type = "ratelimit"
+namespace_id = "1002"
+simple = { limit = 20, period = 60 }

@@ -1,0 +1,12 @@
+# project context stays local (public repo hygiene rule)
+CLAUDE.md
+
+# pipeline output lives on the data branch, not main
+data_out/
+_raw_*.csv
+
+# local tooling
+.wrangler/
+__pycache__/
+venv/
+.DS_Store

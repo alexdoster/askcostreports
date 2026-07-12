@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AskCostReports — Ask any US hospital's Medicare cost report</title>
+<meta name="description" content="Ask questions about any US hospital's finances in plain English. Every Medicare cost report, 2011-2023, queryable in your browser.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;color:#1a1a18;min-height:100vh;display:flex;flex-direction:column}
+.wrap{max-width:640px;margin:0 auto;padding:64px 24px;flex:1}
+.tag{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#0F6E56;font-family:-apple-system,sans-serif;margin-bottom:14px}
+h1{font-size:34px;color:#1d3a52;line-height:1.2;margin-bottom:16px}
+.sub{font-size:16px;color:#5f5e5a;line-height:1.7;font-family:-apple-system,sans-serif;margin-bottom:32px}
+.card{background:#fff;border:1px solid #e0ddd6;border-radius:10px;padding:20px 24px;margin-bottom:16px}
+.card h3{font-size:13px;color:#1d3a52;text-transform:uppercase;letter-spacing:.08em;font-family:-apple-system,sans-serif;margin-bottom:10px}
+.card p,.card li{font-size:14px;color:#3d3d3a;line-height:1.7;font-family:-apple-system,sans-serif}
+.card ul{padding-left:18px}
+.stat-row{display:flex;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.stat{flex:1;min-width:140px;background:#fff;border:1px solid #e0ddd6;border-radius:10px;padding:16px;text-align:center}
+.stat .n{font-size:24px;font-weight:700;color:#0F6E56}
+.stat .l{font-size:11px;color:#888780;font-family:-apple-system,sans-serif;margin-top:4px}
+.soon{display:inline-block;background:#1d3a52;color:#fff;font-size:13px;font-family:-apple-system,sans-serif;padding:10px 18px;border-radius:8px;margin-bottom:32px}
+.footer{text-align:center;padding:20px;font-size:12px;color:#888780;font-family:-apple-system,sans-serif;border-top:1px solid #e0ddd6}
+.footer a{color:#1d3a52}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tag">Launching soon</div>
+  <h1>Ask any US hospital's Medicare cost report. In English.</h1>
+  <p class="sub">Every Medicare-certified hospital files an annual cost report — the only public source of complete financials for every American hospital. AskCostReports puts an AI analyst on top of that data, running entirely in your browser.</p>
+
+  <div class="soon">🏥 First release: August 2026</div>
+
+  <div class="stat-row">
+    <div class="stat"><div class="n">~6,000</div><div class="l">hospitals per year</div></div>
+    <div class="stat"><div class="n">2011–2023</div><div class="l">years of filings</div></div>
+    <div class="stat"><div class="n">117</div><div class="l">measures per hospital</div></div>
+  </div>
+
+  <div class="card">
+    <h3>Questions it will answer</h3>
+    <ul>
+      <li>How did this hospital's margins move over the last five years?</li>
+      <li>Which rural Oregon hospitals had the biggest contract-labor spikes?</li>
+      <li>How does charity care burden compare across a market?</li>
+      <li>What's the balance-sheet trend for a system I'm doing diligence on?</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>How it works</h3>
+    <p>CMS cost report data (public domain) refreshes automatically into browser-ready Parquet. DuckDB runs the SQL locally in your browser tab; Claude writes the queries and explains the results. No accounts, no uploads, no server.</p>
+  </div>
+</div>
+<div class="footer">Built by <a href="https://alexdoster.github.io/Portfolio">Alex Doster</a> · Portland, OR · Data: CMS Hospital Provider Cost Report (public domain)</div>
+</body>
+</html>
