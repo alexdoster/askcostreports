@@ -108,11 +108,14 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
     <div class="sb-head">
       <div class="sb-lbl">Suggested Questions</div>
       <button class="cat-btn" data-cat="lookup" onclick="toggleCat('lookup','#1d3a52',this)">Hospital Lookup</button>
+      <div class="q-slot" id="qs-lookup"></div>
       <button class="cat-btn" data-cat="compare" onclick="toggleCat('compare','#0F6E56',this)">Market Comparisons</button>
+      <div class="q-slot" id="qs-compare"></div>
       <button class="cat-btn" data-cat="trends" onclick="toggleCat('trends','#8a4f18',this)">Trends Over Time</button>
+      <div class="q-slot" id="qs-trends"></div>
       <button class="cat-btn" data-cat="safetynet" onclick="toggleCat('safetynet','#6B3FA0',this)">Charity Care &amp; Labor</button>
+      <div class="q-slot" id="qs-safetynet"></div>
     </div>
-    <div id="q-container"></div>
     <div class="sb-hint" id="sb-hint">Pick a category to browse questions, or type your own. Every answer shows the SQL it ran, so you can verify the work.</div>
   </div>
 
@@ -494,11 +497,11 @@ function setDis(v) {
 
 function toggleCat(cat, color, btn) {
   document.querySelectorAll(".cat-btn").forEach(b => { b.style.borderColor = ""; b.style.background = ""; b.style.color = ""; b.style.fontWeight = ""; });
-  if (activeCat === cat) { activeCat = null; document.getElementById("q-container").innerHTML = ""; document.getElementById("sb-hint").style.display = "block"; return; }
+  document.querySelectorAll(".q-slot").forEach(s => { s.innerHTML = ""; });
+  if (activeCat === cat) { activeCat = null; return; }
   activeCat = cat;
   btn.style.borderColor = color; btn.style.background = color + "14"; btn.style.color = color; btn.style.fontWeight = "600";
-  document.getElementById("sb-hint").style.display = "none";
-  document.getElementById("q-container").innerHTML = '<div class="q-list">' + QUESTIONS[cat].map(q =>
+  document.getElementById("qs-" + cat).innerHTML = '<div class="q-list" style="padding:6px 2px 10px">' + QUESTIONS[cat].map(q =>
     `<button class="q-btn" onclick="window._ask(this)">${q}</button>`
   ).join("") + "</div>";
 }
