@@ -136,8 +136,8 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 
 <div class="header">
   <div>
-    <div style="color:#fff;font-family:-apple-system,sans-serif;font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1.15">Ask<span style="color:#7fc7ae">Cost</span>Reports<span style="color:#5f7d96;font-weight:600">.com</span></div>
-    <div style="color:#93aec4;font-family:-apple-system,sans-serif;font-size:11.5px" id="hdr-sub">Every Medicare-certified US hospital · Connected to AI · Free</div>
+    <div style="color:#fff;font-family:-apple-system,sans-serif;font-size:28px;font-weight:800;letter-spacing:-.01em;line-height:1.15">Ask<span style="color:#7fc7ae">Cost</span>Reports<span style="color:#5f7d96;font-weight:600">.com</span></div>
+    <div style="color:#93aec4;font-family:-apple-system,sans-serif;font-size:11px;margin-top:1px" id="hdr-sub">Every Medicare-certified US hospital · Connected to AI · Free</div>
   </div>
   <div style="display:flex;align-items:center;gap:16px">
     <a class="hdr-link" href="#" onclick="showBrowse();return false">Browse the data</a>
@@ -271,7 +271,7 @@ import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0
 
 // Bump on every deploy — shown in the input hint and About footer so a stale
 // cached page is identifiable at a glance.
-const APP_VERSION = "1.1.0";
+const APP_VERSION = "1.2.0";
 console.log("AskCostReports v" + APP_VERSION);
 
 // jsDelivr fronts the GitHub data branch with a real CDN (survives traffic
@@ -341,8 +341,8 @@ const QUESTIONS = {
     "What is the average DSH percentage by state?"
   ],
   mine: [
-    "Show me __________'s key financials for the latest year",
-    "How has __________'s contract labor spending changed year over year?",
+    "Show me the latest key financials for __________",
+    "How has contract labor spending changed year over year at __________?",
     "How does __________ compare to other hospitals in its state by total costs?",
     "How much charity care does __________ provide?"
   ]
@@ -649,7 +649,7 @@ function addAIMsg(sql, queryResult, answer, tokens, questionCost, sessionCost) {
       </div>
       ${queryResult.rows.length ? `<button class="sql-toggle" style="margin-left:14px" onclick="window._dlcsv(${resultIdx})">↓ Download results (CSV, opens in Excel)</button>` : ""}
     </div>
-    <div class="cost-line">↳ ${tokens.toLocaleString()} tokens · $${questionCost.toFixed(4)} this question · $${sessionCost.toFixed(4)} session</div>
+    <div class="cost-line">↳ ${tokens.toLocaleString()} tokens · $${questionCost.toFixed(4)} this question · $${sessionCost.toFixed(4)} session · askcostreports.com</div>
   </div>`;
   c.appendChild(row); c.scrollTop = c.scrollHeight;
 }

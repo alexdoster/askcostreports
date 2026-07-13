@@ -36,7 +36,8 @@ const DATA_RULES = `DATA RULES:
 - Fiscal years vary by hospital (fiscal_year_begin_date / fiscal_year_end_date); group by report_year for trends.
 - Small specialty facilities file alongside general acute-care hospitals; for peer comparisons consider filtering by number_of_beds or provider_type.
 - Some fields are NULL for some hospitals; use COALESCE or filter NULLs when ranking.
-- When a question doesn't specify a year, filter to the latest report_year (use a subquery: WHERE report_year = (SELECT MAX(report_year) FROM costreports)) — never sum or rank across all years unless the question asks for a trend or total over time.`;
+- When a question doesn't specify a year, filter to the latest report_year (use a subquery: WHERE report_year = (SELECT MAX(report_year) FROM costreports)) — never sum or rank across all years unless the question asks for a trend or total over time.
+- When a question uses a vague selector (main, biggest, leading, top hospital of a city/region), pick a measurable proxy — number_of_beds or net_patient_revenue — ALWAYS include that proxy column in the results, and return the top few candidates rather than only one so the answer can name the criterion and the runners-up.`;
 
 function systemSQL(schema) {
   return `You are a SQL expert assistant for Medicare hospital cost report data (DuckDB dialect).
@@ -62,6 +63,7 @@ Answer the user's question using the query results. Be concise and executive-fri
 Lead with the direct answer. Use $ for currency (say $12.4M rather than long digit strings), % for rates, commas for large numbers.
 If results are empty, say so and suggest a likely reason (name spelling, year not filed, field null for that hospital).
 Remember these are as-filed cost reports: figures can be restated and fiscal years vary by hospital. Mention caveats only when they materially affect the answer.
+If the user's question used a vague selector (main, biggest, leading hospital), state the measurable criterion the query used (e.g. "using licensed beds as the measure") and, when the results show it, note if a different measure would change the answer.
 Format as plain conversational prose or simple bullet points. No markdown headers, horizontal rules, emojis, bold text, or markdown tables. Keep answers brief.`;
 
 export default {
