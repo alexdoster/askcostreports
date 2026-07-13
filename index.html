@@ -55,6 +55,8 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 .q-btn:disabled{opacity:.5;cursor:not-allowed}
 .chev{display:inline-block;width:14px;color:#aaa9a2;font-size:10px;transition:transform .15s}
 .cat-btn{font-weight:600}
+.cat-mine{border-style:dashed;border-color:#0F6E5680;color:#0F6E56}
+.q-hint{font-size:11px;color:#888780;font-style:italic;font-family:-apple-system,sans-serif;margin:4px 0 4px 10px}
 .sb-hint{padding:14px 16px;color:#888780;font-size:12px;line-height:1.6;font-family:-apple-system,sans-serif}
 .chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .messages{flex:1;overflow-y:auto;padding:24px 28px}
@@ -199,6 +201,12 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
       <div class="q-slot" id="qs-trends"></div>
       <button class="cat-btn" data-cat="safetynet" onclick="toggleCat('safetynet','#52708C',this)"><span class="chev">▸</span>Charity Care &amp; Labor</button>
       <div class="q-slot" id="qs-safetynet"></div>
+      <button class="cat-btn" data-cat="balance" onclick="toggleCat('balance','#14526D',this)"><span class="chev">▸</span>Balance Sheet &amp; Debt</button>
+      <div class="q-slot" id="qs-balance"></div>
+      <button class="cat-btn" data-cat="payments" onclick="toggleCat('payments','#2E7D68',this)"><span class="chev">▸</span>Medicare &amp; Medicaid</button>
+      <div class="q-slot" id="qs-payments"></div>
+      <button class="cat-btn cat-mine" data-cat="mine" onclick="toggleCat('mine','#0F6E56',this)"><span class="chev">▸</span>✎ Try Your Hospital</button>
+      <div class="q-slot" id="qs-mine"></div>
     </div>
     <div class="sb-hint" id="sb-hint">Pick a category to browse questions, or type your own. Every answer shows its work, so you can verify the numbers.</div>
   </div>
@@ -230,6 +238,18 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
             <div style="font-size:13px;font-weight:600;color:#52708C">Charity Care &amp; Labor</div>
             <div style="font-size:11px;color:#888780;margin-top:3px;font-family:-apple-system,sans-serif">Uncompensated care, contract labor</div>
           </div>
+          <div class="topic-card" style="border-color:#14526D30;background:#14526D08" onclick="toggleCat('balance','#14526D',document.querySelector('[data-cat=balance]'))">
+            <div style="font-size:13px;font-weight:600;color:#14526D">Balance Sheet &amp; Debt</div>
+            <div style="font-size:11px;color:#888780;margin-top:3px;font-family:-apple-system,sans-serif">Cash, assets, debt, fund balances</div>
+          </div>
+          <div class="topic-card" style="border-color:#2E7D6830;background:#2E7D6808" onclick="toggleCat('payments','#2E7D68',document.querySelector('[data-cat=payments]'))">
+            <div style="font-size:13px;font-weight:600;color:#2E7D68">Medicare &amp; Medicaid</div>
+            <div style="font-size:11px;color:#888780;margin-top:3px;font-family:-apple-system,sans-serif">DSH, IME, payer mix, discharges</div>
+          </div>
+          <div class="topic-card" style="grid-column:1/-1;border:1px dashed #0F6E5680;background:#0F6E5608" onclick="toggleCat('mine','#0F6E56',document.querySelector('[data-cat=mine]'))">
+            <div style="font-size:13px;font-weight:600;color:#0F6E56">✎ Try Your Hospital</div>
+            <div style="font-size:11px;color:#888780;margin-top:3px;font-family:-apple-system,sans-serif">Fill-in-the-blank questions — type any hospital's name</div>
+          </div>
         </div>
         <div id="welcome-qs"></div>
         <div class="data-note">Data: CMS Hospital Provider Cost Report (public domain), as filed by hospitals. Cost reports trail real time by 1–2 years — that's the nature of the filing cycle, and every analytics vendor works from the same publications. Refreshed automatically when CMS publishes.</div>
@@ -251,7 +271,7 @@ import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0
 
 // Bump on every deploy — shown in the input hint and About footer so a stale
 // cached page is identifiable at a glance.
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "1.1.0";
 console.log("AskCostReports v" + APP_VERSION);
 
 // jsDelivr fronts the GitHub data branch with a real CDN (survives traffic
@@ -303,6 +323,28 @@ const QUESTIONS = {
     "Which 10 hospitals nationally reported the most total unreimbursed and uncompensated care?",
     "What share of Oregon hospitals' costs went to salaries in the latest year?",
     "Rank states by total charity care cost in the latest year"
+  ],
+  balance: [
+    "Which Oregon hospitals have the most cash on hand?",
+    "Which large hospitals carry the most long-term debt?",
+    "Rank Portland hospitals by total assets",
+    "How many hospitals have negative fund balances, by state?",
+    "Compare current assets to current liabilities for the biggest Oregon hospitals",
+    "Which hospitals spent the most on buildings and fixed equipment?"
+  ],
+  payments: [
+    "Which hospitals receive the largest disproportionate share (DSH) adjustments?",
+    "Which Oregon hospitals rely most on Medicaid revenue?",
+    "Which hospitals had the most Medicare discharges in the latest year?",
+    "Rank states by total Medicaid charges",
+    "Which teaching hospitals receive the biggest IME payments?",
+    "What is the average DSH percentage by state?"
+  ],
+  mine: [
+    "Show me __________'s key financials for the latest year",
+    "How has __________'s contract labor spending changed year over year?",
+    "How does __________ compare to other hospitals in its state by total costs?",
+    "How much charity care does __________ provide?"
   ]
 };
 
@@ -671,9 +713,12 @@ function toggleCat(cat, color, btn) {
   activeCat = cat;
   btn.style.borderColor = color; btn.style.background = color + "14"; btn.style.color = color;
   const ch = btn.querySelector(".chev"); if (ch) { ch.textContent = "▾"; ch.style.color = color; }
+  // "mine" is the fill-in-the-blank group: clicking loads the input instead of sending
+  const handler = cat === "mine" ? "window._askTpl(this)" : "window._ask(this)";
   const listHTML =
+    (cat === "mine" ? `<div class="q-hint">Click one, then type a hospital name in the blank</div>` : "") +
     `<div class="q-list" style="border-left-color:${color}">` + QUESTIONS[cat].map(q =>
-      `<button class="q-btn" onclick="window._ask(this)" ${loading || !db ? "disabled" : ""}>${q}</button>`
+      `<button class="q-btn" onclick="${handler}" ${loading || !db ? "disabled" : ""}>${q}</button>`
     ).join("") + "</div>";
   document.getElementById("qs-" + cat).innerHTML = listHTML;
   // Mirror into the welcome screen — on phones the sidebar is hidden, so this
@@ -682,9 +727,30 @@ function toggleCat(cat, color, btn) {
 }
 
 window._ask = (btn) => send(btn.textContent);
+// Template questions load into the input with the blank selected, ready to type over
+window._askTpl = (btn) => {
+  if (loading || !db) return;
+  const inp = document.getElementById("inp");
+  inp.value = btn.textContent;
+  inp.style.height = "auto"; inp.style.height = Math.min(inp.scrollHeight, 120) + "px";
+  inp.focus();
+  const s = inp.value.indexOf("_");
+  if (s >= 0) inp.setSelectionRange(s, inp.value.lastIndexOf("_") + 1);
+};
 window.toggleCat = toggleCat;
 function onKey(e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); doSend(); } }
-function doSend() { const v = document.getElementById("inp").value.trim(); if (v) send(v); }
+function doSend() {
+  const inp = document.getElementById("inp");
+  const v = inp.value.trim();
+  if (!v) return;
+  // Blank still unfilled — reselect it instead of sending a question about "__________"
+  if (/_{3,}/.test(v)) {
+    inp.focus();
+    inp.setSelectionRange(v.indexOf("_"), v.lastIndexOf("_") + 1);
+    return;
+  }
+  send(v);
+}
 function newConv() {
   conversationHistory = [];
   document.getElementById("messages").innerHTML = '<div class="welcome" id="welcome"><h2>What would you like to know?</h2><p>Ask about any US hospital\'s costs, margins, staffing, charity care, or balance sheet.</p></div>';
