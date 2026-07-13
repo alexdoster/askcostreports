@@ -99,13 +99,17 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 .send-btn:hover:not(:disabled){background:#0a5843;transform:translateY(-1px);box-shadow:0 3px 10px rgba(15,110,86,.25)}
 .send-btn:disabled{background:#c8c5be;cursor:not-allowed}
 .inp-hint{font-size:11px;color:#aaa9a2;margin-top:7px;text-align:center;font-family:-apple-system,sans-serif}
-.load-overlay{position:fixed;inset:0;background:rgba(247,246,243,.97);display:flex;align-items:center;justify-content:center;z-index:100}
-.load-card{background:#fff;border:1px solid #e0ddd6;border-radius:12px;padding:28px 32px;width:440px;max-width:92vw;box-shadow:0 8px 32px rgba(0,0,0,.1)}
-.load-card h3{font-size:17px;color:#1d3a52;margin-bottom:6px}
-.load-card p{font-size:13px;color:#5f5e5a;line-height:1.6;margin-bottom:16px;font-family:-apple-system,sans-serif}
-.load-bar-bg{height:5px;background:#e0ddd6;border-radius:3px;margin-bottom:8px}
-.load-bar-fill{height:5px;background:#0F6E56;border-radius:3px;transition:width .3s;width:0%}
+.load-overlay{position:fixed;inset:0;background:#1d3a52;display:flex;align-items:center;justify-content:center;z-index:100;border-bottom:6px solid #0F6E56;transition:opacity .45s}
+.load-overlay.done{opacity:0;pointer-events:none}
+.load-card{width:540px;max-width:90vw;text-align:center}
+.load-wm{font-family:Georgia,serif;font-weight:700;font-size:clamp(34px,7vw,48px);color:#fff;letter-spacing:-.01em;margin-bottom:8px}
+.load-wm .com{color:#7fc7ae}
+.load-tag{font-size:clamp(14px,3vw,18px);color:#c9d6e2;font-family:Georgia,serif;margin-bottom:24px}
+.load-card p{font-size:13px;color:#93aec4;line-height:1.6;margin-bottom:26px;font-family:-apple-system,sans-serif}
+.load-bar-bg{height:5px;background:rgba(255,255,255,.16);border-radius:3px;margin-bottom:10px}
+.load-bar-fill{height:5px;background:#7fc7ae;border-radius:3px;transition:width .3s;width:0%}
 .load-status{font-size:11px;color:#888780;font-family:-apple-system,sans-serif}
+.load-overlay .load-status{color:#93aec4;font-size:12px}
 .cost-line{font-size:11px;color:#aaa9a2;margin-top:7px;font-family:-apple-system,sans-serif}
 .sql-toggle{font-size:11px;color:#888780;background:none;border:none;cursor:pointer;padding:0;font-family:-apple-system,sans-serif;margin-bottom:4px;text-decoration:underline;text-decoration-style:dotted}
 .sql-toggle:hover{color:#1d3a52}
@@ -118,7 +122,8 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 
 <div class="load-overlay" id="load-overlay">
   <div class="load-card">
-    <h3>AskCostReports</h3>
+    <div class="load-wm">AskCostReports<span class="com">.com</span></div>
+    <div class="load-tag">Ask anything about US hospital finances</div>
     <p>Loading Medicare cost report data into your browser. Queries run locally — only your questions go to the AI, never the data.</p>
     <div class="load-bar-bg"><div class="load-bar-fill" id="load-bar"></div></div>
     <div class="load-status" id="load-status">Starting analytics engine...</div>
@@ -729,7 +734,9 @@ window.showBrowse = async () => {
     setStatus("Starting analytics engine...");
     await initDuckDB();
     await loadData(setStatus, setBar);
-    document.getElementById("load-overlay").style.display = "none";
+    const lo = document.getElementById("load-overlay");
+    lo.classList.add("done");
+    setTimeout(() => { lo.style.display = "none"; }, 500);
     document.getElementById("status-pill").textContent = "● Ready — data loaded locally";
     document.getElementById("status-pill").className = "pill ready";
     document.getElementById("inp").disabled = false;
