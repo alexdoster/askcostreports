@@ -303,12 +303,27 @@ async function loadData(setStatus, setBar) {
 
   // Fetch all years in parallel — 13 sequential round trips was the slowest
   // part of first load. Progress advances as each file lands.
+  // Per-file timeout + fallback: jsDelivr's first pull of an uncached file
+  // can hang, so a stuck file retries on the other host instead of stalling
+  // the whole load.
+  async function fetchDataFile(f) {
+    const bases = [DATA_BASE, ...DATA_BASES.filter(b => b !== DATA_BASE)];
+    for (const base of bases) {
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 25000);
+        const resp = await fetch(base + f, { signal: ctrl.signal });
+        clearTimeout(timer);
+        if (resp.ok) return resp;
+      } catch { /* timed out or network error — try the next host */ }
+    }
+    throw new Error(`Failed to fetch ${f} from all data hosts`);
+  }
   const files = MANIFEST.files;
   let done = 0;
   setStatus(`Downloading ${files.length} data files (~25 MB, one time per visit)...`);
   await Promise.all(files.map(async f => {
-    const resp = await fetch(DATA_BASE + f);
-    if (!resp.ok) throw new Error(`Failed to fetch ${f}: ${resp.status}`);
+    const resp = await fetchDataFile(f);
     const buf = new Uint8Array(await resp.arrayBuffer());
     await db.registerFileBuffer(f, buf);
     done++;
