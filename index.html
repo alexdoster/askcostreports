@@ -162,6 +162,10 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
       <p>Cost reports trail real time by one to two years: hospitals file about five months after their fiscal year ends, and CMS audits and publishes in batches. Every analytics vendor works from these same publications. This app refreshes itself automatically when CMS publishes new data.</p>
     </div>
     <div class="about-sec">
+      <h4>Why use year-old data?</h4>
+      <p>Because it answers structural questions, the way an annual report does. Cost per bed, payer mix, margins, charity care burden, how a hospital compares to its peers — these move on a scale of years, not weeks. Nobody complains that a 10-K is nine months old. And since every hospital files on the same cycle, nobody has fresher numbers than these: analysts compete on how well they read the filings, not on recency.</p>
+    </div>
+    <div class="about-sec">
       <h4>Read it like an analyst</h4>
       <p>Figures are as filed and can be restated later. Fiscal years vary by hospital, so group by report year for trends. Small specialty facilities file alongside general acute-care hospitals — pick peer groups thoughtfully. And the AI can write an imperfect query: every answer shows its work so you can verify before you rely on a number.</p>
     </div>
@@ -271,7 +275,7 @@ import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0
 
 // Bump on every deploy — shown in the input hint and About footer so a stale
 // cached page is identifiable at a glance.
-const APP_VERSION = "1.2.2";
+const APP_VERSION = "1.2.3";
 console.log("AskCostReports v" + APP_VERSION);
 
 // jsDelivr fronts the GitHub data branch with a real CDN (survives traffic
