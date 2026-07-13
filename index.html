@@ -11,6 +11,21 @@
 <meta property="og:image" content="https://askcostreports.com/og.png">
 <meta property="og:url" content="https://askcostreports.com">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://askcostreports.com/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "AskCostReports",
+  "url": "https://askcostreports.com/",
+  "description": "Ask anything about any US hospital's finances. Free AI chat over CMS Medicare cost report data for ~6,000 hospitals, 2011-2023. Every answer shows the SQL it ran and exports to Excel.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web browser",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Alex Doster", "url": "https://alexdoster.github.io/Portfolio" }
+}
+</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d3a52'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Georgia' font-size='19' font-weight='bold' fill='%237fc7ae'%3E%24%3C/text%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -276,7 +291,7 @@ import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0
 
 // Bump on every deploy — shown in the input hint and About footer so a stale
 // cached page is identifiable at a glance.
-const APP_VERSION = "1.2.7";
+const APP_VERSION = "1.2.8";
 console.log("AskCostReports v" + APP_VERSION);
 
 // jsDelivr fronts the GitHub data branch with a real CDN (survives traffic
