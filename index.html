@@ -563,11 +563,32 @@ function addUserMsg(text) {
   c.appendChild(row); c.scrollTop = c.scrollHeight;
 }
 
+// Results kept per answer so the CSV button can rebuild them on click
+const SAVED_RESULTS = [];
+function toCSV(schema, rows) {
+  const cell = v => {
+    const s = v === null || v === undefined ? "" : String(v);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  return schema.map(cell).join(",") + "\n" +
+    rows.map(r => schema.map(c => cell(r[c])).join(",")).join("\n");
+}
+window._dlcsv = (i) => {
+  const { schema, rows } = SAVED_RESULTS[i];
+  const blob = new Blob([toCSV(schema, rows)], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `askcostreports_${new Date().toISOString().slice(0, 10)}_${i + 1}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
 function addAIMsg(sql, queryResult, answer, tokens, questionCost, sessionCost) {
   const c = document.getElementById("messages");
   const row = document.createElement("div");
   row.className = "msg-row";
   const tableHTML = renderResultTable(queryResult.schema, queryResult.rows);
+  const resultIdx = SAVED_RESULTS.push(queryResult) - 1;
   const toggleId = "sql-" + Date.now();
   row.innerHTML = `<div class="ai-avatar">AI</div><div class="bubble ai">
     <div style="margin-bottom:10px">${fmt(answer)}</div>
@@ -579,6 +600,7 @@ function addAIMsg(sql, queryResult, answer, tokens, questionCost, sessionCost) {
         <div class="sql-label" style="margin-top:8px">Results (${queryResult.rows.length} row${queryResult.rows.length !== 1 ? "s" : ""})</div>
         ${tableHTML}
       </div>
+      ${queryResult.rows.length ? `<button class="sql-toggle" style="margin-left:14px" onclick="window._dlcsv(${resultIdx})">↓ Download results (CSV, opens in Excel)</button>` : ""}
     </div>
     <div class="cost-line">↳ ${tokens.toLocaleString()} tokens · $${questionCost.toFixed(4)} this question · $${sessionCost.toFixed(4)} session</div>
   </div>`;
