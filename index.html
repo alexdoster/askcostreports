@@ -176,7 +176,8 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
     <div class="about-links">
       <a href="https://data.cms.gov/provider-compliance/cost-reports/hospital-provider-cost-report" target="_blank" rel="noopener">Source: CMS Hospital Provider Cost Report ↗</a>
       <a href="https://github.com/alexdoster/askcostreports" target="_blank" rel="noopener">Open source — inspect the code ↗</a>
-      <a href="https://alexdoster.github.io/Portfolio" target="_blank" rel="noopener">Contact the developer ↗</a>
+      <a href="mailto:alex@askcostreports.com">Contact the developer: alex@askcostreports.com</a>
+      <a href="https://alexdoster.github.io/Portfolio" target="_blank" rel="noopener">More of my work ↗</a>
     </div>
     <div class="about-foot">Built by <a href="https://alexdoster.github.io/Portfolio" target="_blank" rel="noopener">Alex Doster</a> · Portland, OR · <span id="about-ver"></span></div>
   </div>
@@ -275,7 +276,7 @@ import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0
 
 // Bump on every deploy — shown in the input hint and About footer so a stale
 // cached page is identifiable at a glance.
-const APP_VERSION = "1.2.6";
+const APP_VERSION = "1.2.7";
 console.log("AskCostReports v" + APP_VERSION);
 
 // jsDelivr fronts the GitHub data branch with a real CDN (survives traffic
@@ -679,7 +680,7 @@ function addBudgetMsg() {
   row.innerHTML = `<div class="ai-avatar">AI</div><div class="bubble ai" style="border-color:#0F6E56">
     <div style="font-weight:600;color:#0F6E56;margin-bottom:6px">This free tool hit its AI budget — thanks for the enthusiasm.</div>
     <div style="font-size:13px;line-height:1.6">AskCostReports runs on a fixed AI budget to stay free, and it's used up for the moment. Check back soon — it gets topped up. The data is still loaded in your browser right now, so anything already on screen keeps working.</div>
-    <div style="font-size:13px;line-height:1.6;margin-top:8px">Need heavier access, or want this kind of tool on your organization's own data? <a href="https://alexdoster.github.io/Portfolio" target="_blank" rel="noopener" style="color:#0F6E56;font-weight:600">Get in touch →</a></div>
+    <div style="font-size:13px;line-height:1.6;margin-top:8px">Need heavier access, or want this kind of tool on your organization's own data? <a href="mailto:alex@askcostreports.com" style="color:#0F6E56;font-weight:600">Get in touch →</a></div>
   </div>`;
   c.appendChild(row); c.scrollTop = c.scrollHeight;
 }
