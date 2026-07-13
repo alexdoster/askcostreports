@@ -123,7 +123,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 <div class="header">
   <div>
     <div style="color:#fff;font-family:-apple-system,sans-serif;font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1.15">Ask<span style="color:#7fc7ae">Cost</span>Reports<span style="color:#5f7d96;font-weight:600">.com</span></div>
-    <div style="color:#93aec4;font-family:-apple-system,sans-serif;font-size:11.5px" id="hdr-sub">Every Medicare-certified US hospital · Free · No signup</div>
+    <div style="color:#93aec4;font-family:-apple-system,sans-serif;font-size:11.5px" id="hdr-sub">Every Medicare-certified US hospital · Connected to AI · Free</div>
   </div>
   <div style="display:flex;align-items:center;gap:16px">
     <a class="hdr-link" href="#" onclick="showAbout();return false">About the data</a>
@@ -159,6 +159,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
       <a href="https://github.com/alexdoster/askcostreports" target="_blank" rel="noopener">Open source — inspect the code ↗</a>
       <a href="https://alexdoster.github.io/Portfolio" target="_blank" rel="noopener">Contact the developer ↗</a>
     </div>
+    <div class="about-foot">Built by <a href="https://alexdoster.github.io/Portfolio" target="_blank" rel="noopener">Alex Doster</a> · Portland, OR</div>
   </div>
 </div>
 
@@ -346,7 +347,7 @@ async function loadData(setStatus, setBar) {
     `· <strong>117</strong> measures per hospital: income statement, balance sheet, utilization, staffing, charity care<br>` +
     `· Source: CMS Hospital Provider Cost Report (public domain)`;
   document.getElementById("hdr-sub").textContent =
-    `Every Medicare-certified US hospital ${yrs[0]}–${yrs[yrs.length - 1]} · Free · No signup`;
+    `Every Medicare-certified US hospital ${yrs[0]}–${yrs[yrs.length - 1]} · Connected to AI · Free`;
   document.getElementById("inp-hint").textContent =
     `Press Enter to send · Data through ${yrs[yrs.length - 1]} — cost reports trail real time by 1–2 years`;
   document.getElementById("about-fresh").textContent =
