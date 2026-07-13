@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AskCostReports.com — Ask any US hospital's Medicare cost report</title>
-<meta name="description" content="Ask questions about any US hospital's finances. Every Medicare cost report, queryable free in your browser.">
+<title>AskCostReports.com — Ask anything about US hospital finances</title>
+<meta name="description" content="Ask anything about US hospital finances. Every Medicare cost report — ~6,000 hospitals, 2011-2023 — free, no signup.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="AskCostReports.com — Ask any US hospital's Medicare cost report">
-<meta property="og:description" content="Every US hospital's finances. Free, runs in your browser, every answer shows its work. ~6,000 hospitals, 2011-2023.">
+<meta property="og:title" content="AskCostReports.com — Ask anything about US hospital finances">
+<meta property="og:description" content="Free, no signup, every answer shows its work. ~6,000 hospitals, 2011-2023, straight from CMS cost reports.">
 <meta property="og:image" content="https://askcostreports.com/og.png">
 <meta property="og:url" content="https://askcostreports.com">
 <meta name="twitter:card" content="summary_large_image">
@@ -121,7 +121,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 <div class="header">
   <div>
     <div style="color:#fff;font-family:-apple-system,sans-serif;font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1.15">Ask<span style="color:#7fc7ae">Cost</span>Reports<span style="color:#5f7d96;font-weight:600">.com</span></div>
-    <div style="color:#93aec4;font-family:-apple-system,sans-serif;font-size:11.5px" id="hdr-sub">Every US hospital's finances · Free · Runs in your browser</div>
+    <div style="color:#93aec4;font-family:-apple-system,sans-serif;font-size:11.5px" id="hdr-sub">Every US hospital's finances · Free · No signup</div>
   </div>
   <div style="display:flex;align-items:center;gap:16px">
     <a class="hdr-link" href="#" onclick="showAbout();return false">About the data</a>
@@ -179,7 +179,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
   <div class="chat-area">
     <div class="messages" id="messages">
       <div class="welcome" id="welcome">
-        <h2>Ask any US hospital's Medicare cost report</h2>
+        <h2>Ask anything about US hospital finances</h2>
         <p style="margin-bottom:14px">Every Medicare-certified hospital files an annual cost report — the only public source of complete financials for every American hospital. Ask a question; the AI writes the query, runs it in your browser, and shows its work.</p>
         <div style="background:#fff;border:1px solid #e0ddd6;border-radius:8px;padding:14px 18px;text-align:left;margin-bottom:16px;font-family:-apple-system,sans-serif;font-size:13px;color:#3d3d3a;line-height:1.8">
           <div style="font-weight:600;color:#1d3a52;margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.06em">Dataset</div>
@@ -209,7 +209,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
     <div class="input-area">
       <button class="new-btn" id="new-btn" style="display:none" onclick="newConv()">← New conversation</button>
       <div class="input-row">
-        <textarea class="input-box" id="inp" rows="1" placeholder="Ask about any US hospital's finances..." onkeydown="onKey(event)" disabled></textarea>
+        <textarea class="input-box" id="inp" rows="1" placeholder="Ask anything about US hospital finances..." onkeydown="onKey(event)" disabled></textarea>
         <button class="send-btn" id="send" onclick="doSend()" disabled>Ask →</button>
       </div>
       <div class="inp-hint">Press Enter to send · Shift+Enter for new line · Every answer shows its work</div>
@@ -345,7 +345,7 @@ async function loadData(setStatus, setBar) {
     `· <strong>117</strong> measures per hospital: income statement, balance sheet, utilization, staffing, charity care<br>` +
     `· Source: CMS Hospital Provider Cost Report (public domain)`;
   document.getElementById("hdr-sub").textContent =
-    `Every US hospital's finances ${yrs[0]}–${yrs[yrs.length - 1]} · Free · Runs in your browser`;
+    `Every US hospital's finances ${yrs[0]}–${yrs[yrs.length - 1]} · Free · No signup`;
   document.getElementById("about-fresh").textContent =
     `Currently loaded: ${yrs[0]}–${yrs[yrs.length - 1]}, ${Number(MANIFEST.total_rows).toLocaleString()} hospital-year filings.`;
 
@@ -374,7 +374,12 @@ async function claudeCall(system, messages, maxTokens = 800) {
     sessionInputTokens += data.usage.input_tokens || 0;
     sessionOutputTokens += data.usage.output_tokens || 0;
   }
-  return { text: data.content[0].text.trim(), usage: data.usage || {} };
+  // Sonnet 5 may prepend a "thinking" block on analytical prompts — take the text block by type, not position
+  const textBlock = (data.content || []).find(b => b.type === "text");
+  if (!textBlock || typeof textBlock.text !== "string") {
+    throw new Error("The AI returned an unexpected response. Please try asking again.");
+  }
+  return { text: textBlock.text.trim(), usage: data.usage || {} };
 }
 
 // ── Query execution ────────────────────────────────────────────
@@ -424,7 +429,7 @@ async function send(text) {
 
   try {
     conversationHistory.push({ role: "user", content: text });
-    const sqlResp = await claudeCall(systemSQL(), conversationHistory.map(m => ({ role: m.role, content: m.content })), 600);
+    const sqlResp = await claudeCall(systemSQL(), conversationHistory.map(m => ({ role: m.role, content: m.content })), 1200);
     const sql = sqlResp.text;
     let totalInput = sqlResp.usage.input_tokens || 0;
     let totalOutput = sqlResp.usage.output_tokens || 0;
@@ -440,7 +445,7 @@ async function send(text) {
       const fixResp = await claudeCall(systemSQL(), [
         ...conversationHistory.slice(0, -1),
         { role: "user", content: fixPrompt }
-      ], 600);
+      ], 1200);
       totalInput += fixResp.usage.input_tokens || 0;
       totalOutput += fixResp.usage.output_tokens || 0;
       queryResult = await runQuery(fixResp.text);
@@ -454,7 +459,7 @@ async function send(text) {
       { role: "assistant", content: `I'll query the cost report data.\n\nSQL:\n${conversationHistory[conversationHistory.length - 1].content}\n\nResults:\n${resultText}` },
       { role: "user", content: "Please provide a clear, executive-friendly answer based on these results." }
     ];
-    const answerResp = await claudeCall(SYSTEM_ANSWER, answerMessages, 800);
+    const answerResp = await claudeCall(SYSTEM_ANSWER, answerMessages, 1200);
     totalInput += answerResp.usage.input_tokens || 0;
     totalOutput += answerResp.usage.output_tokens || 0;
 

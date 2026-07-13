@@ -15,7 +15,8 @@ const ALLOWED_ORIGINS = new Set([
   "https://alexdoster.github.io",
 ]);
 const MODEL = "claude-sonnet-5"; // pinned — client-supplied model is ignored
-const MAX_TOKENS_CEILING = 1024;
+// Roomy enough that Sonnet 5's adaptive thinking blocks can't truncate the answer
+const MAX_TOKENS_CEILING = 2048;
 
 export default {
   async fetch(request, env) {
