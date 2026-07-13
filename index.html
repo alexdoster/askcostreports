@@ -37,14 +37,15 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 .about-links a:hover{text-decoration:underline}
 .about-foot{font-size:11.5px;color:#888780;font-family:-apple-system,sans-serif}
 .about-foot a{color:#1d3a52}
-.body{display:flex;flex:1;overflow:hidden}
+.body{display:flex;flex:1;overflow:hidden;width:100%;max-width:1440px;margin:0 auto;border-left:1px solid #e6e3dc;border-right:1px solid #e6e3dc}
+@media (max-width:1470px){.body{border-left:none;border-right:none}}
 .sidebar{width:280px;background:#fff;border-right:1px solid #e0ddd6;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
 .sb-head{padding:16px 16px 10px;border-bottom:1px solid #e0ddd6}
 .sb-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#888780;margin-bottom:10px;font-family:-apple-system,sans-serif}
-.cat-btn{display:block;width:100%;text-align:left;padding:8px 11px;margin-bottom:4px;border-radius:6px;border:1px solid #e0ddd6;background:#fafaf8;color:#3d3d3a;font-size:13px;cursor:pointer;font-family:Georgia,serif;transition:all .12s}
+.cat-btn{display:block;width:100%;text-align:left;padding:8px 11px;margin-bottom:4px;border-radius:6px;border:1px solid #e0ddd6;background:#fafaf8;color:#3d3d3a;font-size:13px;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;transition:all .12s}
 .cat-btn:hover{border-color:#1d3a52;color:#1d3a52}
 .q-list{margin:2px 0 10px 10px;padding-left:9px;border-left:2px solid #d3d1c7}
-.q-btn{display:block;width:100%;text-align:left;padding:7px 9px;margin-bottom:2px;border-radius:5px;border:none;background:transparent;color:#4a4a46;font-size:12px;cursor:pointer;font-family:Georgia,serif;line-height:1.4;transition:all .12s}
+.q-btn{display:block;width:100%;text-align:left;padding:7px 9px;margin-bottom:2px;border-radius:5px;border:none;background:transparent;color:#4a4a46;font-size:12px;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.4;transition:all .12s}
 .q-btn:hover{background:#f0ede6;color:#1a1a18}
 .q-btn:disabled{opacity:.5;cursor:not-allowed}
 .chev{display:inline-block;width:14px;color:#aaa9a2;font-size:10px;transition:transform .15s}
@@ -65,13 +66,14 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 .ai-avatar{width:28px;height:28px;border-radius:6px;background:#1d3a52;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;margin-right:10px;margin-top:2px}
 .bubble{max-width:78%;padding:11px 15px;font-size:14px;line-height:1.65;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .bubble.user{background:#1d3a52;color:#fff;border-radius:14px 3px 14px 14px;font-family:-apple-system,sans-serif}
-.bubble.ai{background:#fff;color:#2d2d2b;border-radius:3px 14px 14px 14px;border:1px solid #e0ddd6;font-family:-apple-system,sans-serif}
+.bubble.ai{background:#fff;color:#2d2d2b;border-radius:3px 14px 14px 14px;box-shadow:0 2px 12px rgba(29,58,82,.08);font-family:-apple-system,sans-serif}
 .sql-block{background:#f0ede6;border:1px solid #d3d1c7;border-radius:6px;padding:10px 13px;margin:8px 0;font-family:monospace;font-size:12px;color:#3d3d3a;white-space:pre-wrap;word-break:break-all}
 .sql-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#888780;margin-bottom:4px;font-family:-apple-system,sans-serif}
-.result-table-wrap{overflow-x:auto;margin:8px 0}
-.result-table{width:100%;border-collapse:collapse;font-size:12px;font-family:-apple-system,sans-serif}
+.result-table-wrap{overflow-x:auto;margin:8px 0;border:1px solid #eae7e0;border-radius:8px}
+.result-table{width:100%;border-collapse:collapse;font-size:12px;font-family:-apple-system,sans-serif;font-variant-numeric:tabular-nums}
 .result-table th{background:#1d3a52;color:#fff;padding:6px 10px;text-align:left;font-weight:600;white-space:nowrap}
-.result-table td{padding:6px 10px;border-bottom:1px solid #e8e6df;color:#2d2d2b;white-space:nowrap}
+.result-table td{padding:6px 10px;border-bottom:1px solid #f0eee8;color:#2d2d2b;white-space:nowrap}
+.result-table tr:last-child td{border-bottom:none}
 .result-table tr:nth-child(even) td{background:#fafaf8}
 .b-head{font-weight:600;margin-top:8px;color:#1a1a18}
 .b-head:first-child{margin-top:0}
@@ -86,10 +88,10 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 .new-btn{font-size:12px;color:#888780;background:none;border:none;cursor:pointer;margin-bottom:8px;padding:0;font-family:inherit}
 .new-btn:hover{color:#1d3a52}
 .input-row{display:flex;gap:8px}
-.input-box{flex:1;padding:11px 15px;border-radius:10px;border:1.5px solid #d3d1c7;font-size:14px;font-family:Georgia,serif;resize:none;outline:none;background:#fafaf8;color:#1a1a18;line-height:1.5;transition:border-color .15s}
-.input-box:focus{border-color:#1d3a52}
-.send-btn{padding:11px 18px;border-radius:10px;border:none;background:#0F6E56;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .12s}
-.send-btn:hover:not(:disabled){background:#0a5843}
+.input-box{flex:1;padding:11px 15px;border-radius:10px;border:1.5px solid #d3d1c7;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;resize:none;outline:none;background:#fafaf8;color:#1a1a18;line-height:1.5;max-height:120px;transition:border-color .15s,box-shadow .15s}
+.input-box:focus{border-color:#0F6E56;background:#fff;box-shadow:0 0 0 3px rgba(15,110,86,.1)}
+.send-btn{padding:11px 18px;border-radius:10px;border:none;background:#0F6E56;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;white-space:nowrap;transition:background .12s,transform .12s,box-shadow .12s}
+.send-btn:hover:not(:disabled){background:#0a5843;transform:translateY(-1px);box-shadow:0 3px 10px rgba(15,110,86,.25)}
 .send-btn:disabled{background:#c8c5be;cursor:not-allowed}
 .inp-hint{font-size:11px;color:#aaa9a2;margin-top:7px;text-align:center;font-family:-apple-system,sans-serif}
 .load-overlay{position:fixed;inset:0;background:rgba(247,246,243,.97);display:flex;align-items:center;justify-content:center;z-index:100}
@@ -112,7 +114,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 <div class="load-overlay" id="load-overlay">
   <div class="load-card">
     <h3>AskCostReports</h3>
-    <p>Loading Medicare cost report data into your browser. Everything runs locally — nothing you ask is uploaded anywhere.</p>
+    <p>Loading Medicare cost report data into your browser. Queries run locally — only your questions go to the AI, never the data.</p>
     <div class="load-bar-bg"><div class="load-bar-fill" id="load-bar"></div></div>
     <div class="load-status" id="load-status">Starting analytics engine...</div>
   </div>
@@ -121,9 +123,10 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 <div class="header">
   <div>
     <div style="color:#fff;font-family:-apple-system,sans-serif;font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1.15">Ask<span style="color:#7fc7ae">Cost</span>Reports<span style="color:#5f7d96;font-weight:600">.com</span></div>
-    <div style="color:#93aec4;font-family:-apple-system,sans-serif;font-size:11.5px" id="hdr-sub">Every US hospital's finances · Free · No signup</div>
+    <div style="color:#93aec4;font-family:-apple-system,sans-serif;font-size:11.5px" id="hdr-sub">Every Medicare-certified US hospital · Free · No signup</div>
   </div>
   <div style="display:flex;align-items:center;gap:16px">
+    <a class="hdr-link" href="https://alexdoster.github.io/Portfolio" target="_blank" rel="noopener">Built by Alex Doster ↗</a>
     <a class="hdr-link" href="#" onclick="showAbout();return false">About the data</a>
     <div class="pill loading" id="status-pill">● Loading...</div>
   </div>
@@ -150,7 +153,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
     </div>
     <div class="about-sec">
       <h4>Privacy</h4>
-      <p>The dataset loads into your browser and stays there. Your questions and the query results go to the AI to compose answers; the raw data never does. No accounts, no tracking.</p>
+      <p>The dataset loads into your browser and stays there. Your questions and the query results go to the AI to compose answers; the raw data never does. No accounts, no tracking. The database is a read-only copy in your tab — nothing you run can change anything for anyone else.</p>
     </div>
     <div class="about-links">
       <a href="https://data.cms.gov/provider-compliance/cost-reports/hospital-provider-cost-report" target="_blank" rel="noopener">Source: CMS Hospital Provider Cost Report ↗</a>
@@ -168,9 +171,9 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
       <div class="q-slot" id="qs-lookup"></div>
       <button class="cat-btn" data-cat="compare" onclick="toggleCat('compare','#0F6E56',this)"><span class="chev">▸</span>Market Comparisons</button>
       <div class="q-slot" id="qs-compare"></div>
-      <button class="cat-btn" data-cat="trends" onclick="toggleCat('trends','#8a4f18',this)"><span class="chev">▸</span>Trends Over Time</button>
+      <button class="cat-btn" data-cat="trends" onclick="toggleCat('trends','#12707E',this)"><span class="chev">▸</span>Trends Over Time</button>
       <div class="q-slot" id="qs-trends"></div>
-      <button class="cat-btn" data-cat="safetynet" onclick="toggleCat('safetynet','#6B3FA0',this)"><span class="chev">▸</span>Charity Care &amp; Labor</button>
+      <button class="cat-btn" data-cat="safetynet" onclick="toggleCat('safetynet','#52708C',this)"><span class="chev">▸</span>Charity Care &amp; Labor</button>
       <div class="q-slot" id="qs-safetynet"></div>
     </div>
     <div class="sb-hint" id="sb-hint">Pick a category to browse questions, or type your own. Every answer shows its work, so you can verify the numbers.</div>
@@ -180,7 +183,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
     <div class="messages" id="messages">
       <div class="welcome" id="welcome">
         <h2>Ask anything about US hospital finances</h2>
-        <p style="margin-bottom:14px">Every Medicare-certified hospital files an annual cost report — the only public source of complete financials for every American hospital. Ask a question; the AI writes the query, runs it in your browser, and shows its work.</p>
+        <p style="margin-bottom:14px">Every Medicare-certified hospital files an annual cost report — the only public source of complete financials for nearly every American hospital. Ask a question; the AI writes the query, runs it in your browser, and shows its work.</p>
         <div style="background:#fff;border:1px solid #e0ddd6;border-radius:8px;padding:14px 18px;text-align:left;margin-bottom:16px;font-family:-apple-system,sans-serif;font-size:13px;color:#3d3d3a;line-height:1.8">
           <div style="font-weight:600;color:#1d3a52;margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.06em">Dataset</div>
           <div id="ds-stats">· Loading dataset details...</div>
@@ -194,12 +197,12 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
             <div style="font-size:13px;font-weight:600;color:#0F6E56">Market Comparisons</div>
             <div style="font-size:11px;color:#888780;margin-top:3px;font-family:-apple-system,sans-serif">Benchmark across peers &amp; states</div>
           </div>
-          <div class="topic-card" style="border-color:#8a4f1830;background:#8a4f1808" onclick="toggleCat('trends','#8a4f18',document.querySelector('[data-cat=trends]'))">
-            <div style="font-size:13px;font-weight:600;color:#8a4f18">Trends Over Time</div>
+          <div class="topic-card" style="border-color:#12707E30;background:#12707E08" onclick="toggleCat('trends','#12707E',document.querySelector('[data-cat=trends]'))">
+            <div style="font-size:13px;font-weight:600;color:#12707E">Trends Over Time</div>
             <div style="font-size:11px;color:#888780;margin-top:3px;font-family:-apple-system,sans-serif">Multi-year margins, costs, labor</div>
           </div>
-          <div class="topic-card" style="border-color:#6B3FA030;background:#6B3FA008" onclick="toggleCat('safetynet','#6B3FA0',document.querySelector('[data-cat=safetynet]'))">
-            <div style="font-size:13px;font-weight:600;color:#6B3FA0">Charity Care &amp; Labor</div>
+          <div class="topic-card" style="border-color:#52708C30;background:#52708C08" onclick="toggleCat('safetynet','#52708C',document.querySelector('[data-cat=safetynet]'))">
+            <div style="font-size:13px;font-weight:600;color:#52708C">Charity Care &amp; Labor</div>
             <div style="font-size:11px;color:#888780;margin-top:3px;font-family:-apple-system,sans-serif">Uncompensated care, contract labor</div>
           </div>
         </div>
@@ -209,10 +212,10 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
     <div class="input-area">
       <button class="new-btn" id="new-btn" style="display:none" onclick="newConv()">← New conversation</button>
       <div class="input-row">
-        <textarea class="input-box" id="inp" rows="1" placeholder="Ask anything about US hospital finances..." onkeydown="onKey(event)" disabled></textarea>
+        <textarea class="input-box" id="inp" rows="1" maxlength="500" placeholder="Ask anything about US hospital finances..." onkeydown="onKey(event)" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'" disabled></textarea>
         <button class="send-btn" id="send" onclick="doSend()" disabled>Ask →</button>
       </div>
-      <div class="inp-hint">Press Enter to send · Shift+Enter for new line · Every answer shows its work</div>
+      <div class="inp-hint" id="inp-hint">Press Enter to send · Shift+Enter for new line · Every answer shows its work</div>
     </div>
   </div>
 </div>
@@ -220,7 +223,13 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 <script type="module">
 import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
 
-const DATA_BASE = "https://raw.githubusercontent.com/alexdoster/askcostreports/data/";
+// jsDelivr fronts the GitHub data branch with a real CDN (survives traffic
+// spikes raw.githubusercontent may throttle); raw is the fallback.
+const DATA_BASES = [
+  "https://cdn.jsdelivr.net/gh/alexdoster/askcostreports@data/",
+  "https://raw.githubusercontent.com/alexdoster/askcostreports/data/"
+];
+let DATA_BASE = DATA_BASES[0];
 const WORKER_URL = "https://askcostreports-proxy.alex80ad.workers.dev";
 
 let db = null, conn = null, loading = false, activeCat = null;
@@ -228,41 +237,8 @@ let conversationHistory = [];
 let SCHEMA_TEXT = "";
 let MANIFEST = null;
 
-const DATA_RULES = `DATA RULES:
-- Table: costreports. Grain: one row per hospital per report_year (provider_ccn + report_year).
-- Hospital names are UPPERCASE; always match with ILIKE '%NAME%' (e.g. hospital_name ILIKE '%LEGACY GOOD SAMARITAN%').
-- state_code is the 2-letter state abbreviation, also uppercase (e.g. 'OR').
-- Dollar fields are whole dollars. Bed/day/discharge fields are counts.
-- report_year is the cost reporting year (currently the latest available from CMS; cost reports trail real time by 1-2 years).
-- Fiscal years vary by hospital (fiscal_year_begin_date / fiscal_year_end_date); group by report_year for trends.
-- Small specialty facilities file alongside general acute-care hospitals; for peer comparisons consider filtering by number_of_beds or provider_type.
-- Some fields are NULL for some hospitals; use COALESCE or filter NULLs when ranking.`;
-
-function systemSQL() {
-  return `You are a SQL expert assistant for Medicare hospital cost report data (DuckDB dialect).
-Given a natural language question, write a single DuckDB SQL query to answer it.
-
-TABLE costreports has these columns:
-${SCHEMA_TEXT}
-
-${DATA_RULES}
-
-RULES:
-- Return ONLY the SQL query, no explanation, no markdown fences, no semicolon at end
-- Use DuckDB syntax (date_trunc, strftime, etc.)
-- Limit result sets to 20 rows unless the question asks for more
-- Always use ILIKE for any name or city matching
-- Round large dollar figures sensibly; use ROUND(x/1e6, 1) AS x_millions style for readability when values are in the hundreds of millions
-- Always include hospital_name (and report_year when relevant) in results about specific hospitals`;
-}
-
-const SYSTEM_ANSWER = `You are AskCostReports, an AI analyst for US hospital Medicare cost report data.
-You have just executed a SQL query against CMS cost report filings and received the results below.
-Answer the user's question using the query results. Be concise and executive-friendly.
-Lead with the direct answer. Use $ for currency (say $12.4M rather than long digit strings), % for rates, commas for large numbers.
-If results are empty, say so and suggest a likely reason (name spelling, year not filed, field null for that hospital).
-Remember these are as-filed cost reports: figures can be restated and fiscal years vary by hospital. Mention caveats only when they materially affect the answer.
-Format as plain conversational prose or simple bullet points. No markdown headers, horizontal rules, emojis, bold text, or markdown tables. Keep answers brief.`;
+// System prompts (SQL generation and answer composition) live in the Cloudflare
+// Worker, pinned server-side. The client only sends a mode + the runtime schema.
 
 const QUESTIONS = {
   lookup: [
@@ -315,19 +291,30 @@ async function initDuckDB() {
 
 async function loadData(setStatus, setBar) {
   setStatus("Fetching dataset manifest...");
-  const mResp = await fetch(DATA_BASE + "manifest.json", { cache: "no-store" });
-  if (!mResp.ok) throw new Error("Could not fetch data manifest");
+  let mResp;
+  for (const base of DATA_BASES) {
+    try {
+      mResp = await fetch(base + "manifest.json", { cache: "no-store" });
+      if (mResp.ok) { DATA_BASE = base; break; }
+    } catch { /* try next base */ }
+  }
+  if (!mResp || !mResp.ok) throw new Error("Could not fetch data manifest");
   MANIFEST = await mResp.json();
 
+  // Fetch all years in parallel — 13 sequential round trips was the slowest
+  // part of first load. Progress advances as each file lands.
   const files = MANIFEST.files;
-  for (let i = 0; i < files.length; i++) {
-    setStatus(`Loading ${files[i]} (${i + 1}/${files.length})...`);
-    setBar(Math.round((i / files.length) * 92));
-    const resp = await fetch(DATA_BASE + files[i]);
-    if (!resp.ok) throw new Error(`Failed to fetch ${files[i]}: ${resp.status}`);
+  let done = 0;
+  setStatus(`Downloading ${files.length} data files (~25 MB, one time per visit)...`);
+  await Promise.all(files.map(async f => {
+    const resp = await fetch(DATA_BASE + f);
+    if (!resp.ok) throw new Error(`Failed to fetch ${f}: ${resp.status}`);
     const buf = new Uint8Array(await resp.arrayBuffer());
-    await db.registerFileBuffer(files[i], buf);
-  }
+    await db.registerFileBuffer(f, buf);
+    done++;
+    setStatus(`Downloading data (${done}/${files.length} files)...`);
+    setBar(Math.round((done / files.length) * 92));
+  }));
 
   const fileList = files.map(f => `'${f}'`).join(",");
   await conn.query(`CREATE VIEW costreports AS SELECT * FROM read_parquet([${fileList}])`);
@@ -345,7 +332,9 @@ async function loadData(setStatus, setBar) {
     `· <strong>117</strong> measures per hospital: income statement, balance sheet, utilization, staffing, charity care<br>` +
     `· Source: CMS Hospital Provider Cost Report (public domain)`;
   document.getElementById("hdr-sub").textContent =
-    `Every US hospital's finances ${yrs[0]}–${yrs[yrs.length - 1]} · Free · No signup`;
+    `Every Medicare-certified US hospital ${yrs[0]}–${yrs[yrs.length - 1]} · Free · No signup`;
+  document.getElementById("inp-hint").textContent =
+    `Press Enter to send · Data through ${yrs[yrs.length - 1]} — cost reports trail real time by 1–2 years`;
   document.getElementById("about-fresh").textContent =
     `Currently loaded: ${yrs[0]}–${yrs[yrs.length - 1]}, ${Number(MANIFEST.total_rows).toLocaleString()} hospital-year filings.`;
 
@@ -371,13 +360,15 @@ function reportError(context, err) {
 window.addEventListener("error", e => reportError("window", e.message));
 window.addEventListener("unhandledrejection", e => reportError("promise", e.reason));
 
-async function claudeCall(system, messages, maxTokens = 800) {
+// mode is "sql" or "answer" — the system prompts live in the Worker so the
+// proxy can't be repurposed; the runtime schema rides along for SQL calls.
+async function claudeCall(mode, messages, maxTokens = 800) {
   let res;
   try {
     res = await fetch(WORKER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ max_tokens: maxTokens, system, messages })
+      body: JSON.stringify({ mode, schema: mode === "sql" ? SCHEMA_TEXT : undefined, max_tokens: maxTokens, messages })
     });
   } catch {
     const e = new Error("NETWORK_BLOCKED"); e.isNetworkError = true; throw e;
@@ -443,7 +434,7 @@ async function send(text) {
 
   try {
     conversationHistory.push({ role: "user", content: text });
-    const sqlResp = await claudeCall(systemSQL(), conversationHistory.map(m => ({ role: m.role, content: m.content })), 1200);
+    const sqlResp = await claudeCall("sql", conversationHistory.slice(-12).map(m => ({ role: m.role, content: m.content })), 1200);
     const sql = sqlResp.text;
     let totalInput = sqlResp.usage.input_tokens || 0;
     let totalOutput = sqlResp.usage.output_tokens || 0;
@@ -456,8 +447,9 @@ async function send(text) {
     } catch (queryErr) {
       updateTyping(typingId, "Query errored — retrying...");
       const fixPrompt = `The SQL query failed with error: ${queryErr.message}\n\nSQL attempted:\n${sql}\n\nPlease write a corrected SQL query.`;
-      const fixResp = await claudeCall(systemSQL(), [
-        ...conversationHistory.slice(0, -1),
+      reportError("sql-retry", queryErr);
+      const fixResp = await claudeCall("sql", [
+        ...conversationHistory.slice(-12, -1),
         { role: "user", content: fixPrompt }
       ], 1200);
       totalInput += fixResp.usage.input_tokens || 0;
@@ -473,7 +465,7 @@ async function send(text) {
       { role: "assistant", content: `I'll query the cost report data.\n\nSQL:\n${conversationHistory[conversationHistory.length - 1].content}\n\nResults:\n${resultText}` },
       { role: "user", content: "Please provide a clear, executive-friendly answer based on these results." }
     ];
-    const answerResp = await claudeCall(SYSTEM_ANSWER, answerMessages, 1200);
+    const answerResp = await claudeCall("answer", answerMessages, 1200);
     totalInput += answerResp.usage.input_tokens || 0;
     totalOutput += answerResp.usage.output_tokens || 0;
 
@@ -503,12 +495,16 @@ async function send(text) {
 // ── UI helpers ─────────────────────────────────────────────────
 function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
+function inlineFmt(l) {
+  // escape first, then render inline **bold** so markup can't be injected
+  return esc(l).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+}
 function fmt(t) {
   return t.split("\n").map(l => {
     if (/^\*\*(.+)\*\*$/.test(l)) return `<div class="b-head">${esc(l.slice(2, -2))}</div>`;
-    if (/^\d+\./.test(l) || l.startsWith("- ") || l.startsWith("• ")) return `<div class="b-item">${esc(l)}</div>`;
+    if (/^\d+\./.test(l) || l.startsWith("- ") || l.startsWith("• ")) return `<div class="b-item">${inlineFmt(l)}</div>`;
     if (l.trim() === "") return `<div class="b-gap"></div>`;
-    return `<div>${esc(l)}</div>`;
+    return `<div>${inlineFmt(l)}</div>`;
   }).join("");
 }
 
@@ -602,7 +598,7 @@ function toggleCat(cat, color, btn) {
   const ch = btn.querySelector(".chev"); if (ch) { ch.textContent = "▾"; ch.style.color = color; }
   document.getElementById("qs-" + cat).innerHTML =
     `<div class="q-list" style="border-left-color:${color}">` + QUESTIONS[cat].map(q =>
-      `<button class="q-btn" onclick="window._ask(this)">${q}</button>`
+      `<button class="q-btn" onclick="window._ask(this)" ${loading || !db ? "disabled" : ""}>${q}</button>`
     ).join("") + "</div>";
 }
 
