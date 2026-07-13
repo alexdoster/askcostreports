@@ -387,6 +387,11 @@ async function claudeCall(mode, messages, maxTokens = 800) {
   return { text: textBlock.text.trim(), usage: data.usage || {} };
 }
 
+// The prompt says no markdown fences, but models occasionally add them anyway
+function stripFences(t) {
+  return t.replace(/^\s*```[a-z]*\s*/i, "").replace(/\s*```\s*$/, "").trim();
+}
+
 // ── Query execution ────────────────────────────────────────────
 async function runQuery(sql) {
   const result = await conn.query(sql);
@@ -435,7 +440,7 @@ async function send(text) {
   try {
     conversationHistory.push({ role: "user", content: text });
     const sqlResp = await claudeCall("sql", conversationHistory.slice(-12).map(m => ({ role: m.role, content: m.content })), 1200);
-    const sql = sqlResp.text;
+    const sql = stripFences(sqlResp.text);
     let totalInput = sqlResp.usage.input_tokens || 0;
     let totalOutput = sqlResp.usage.output_tokens || 0;
     conversationHistory.push({ role: "assistant", content: sql });
@@ -454,8 +459,9 @@ async function send(text) {
       ], 1200);
       totalInput += fixResp.usage.input_tokens || 0;
       totalOutput += fixResp.usage.output_tokens || 0;
-      queryResult = await runQuery(fixResp.text);
-      conversationHistory[conversationHistory.length - 1].content = fixResp.text;
+      const fixedSql = stripFences(fixResp.text);
+      queryResult = await runQuery(fixedSql);
+      conversationHistory[conversationHistory.length - 1].content = fixedSql;
     }
 
     updateTyping(typingId, "Composing answer...");
