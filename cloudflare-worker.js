@@ -29,6 +29,7 @@ const MAX_SCHEMA_CHARS = 8000;
 const DATA_RULES = `DATA RULES:
 - Table: costreports. Grain: one row per hospital per report_year (provider_ccn + report_year).
 - Hospital names are UPPERCASE with inconsistent punctuation and abbreviation (ST vs ST., MEDICAL CENTER vs MED CTR). Match each distinctive word with its own ILIKE, ANDed together: hospital_name ILIKE '%LEGACY%' AND hospital_name ILIKE '%SAMARITAN%'. NEVER put multiple words inside one ILIKE pattern — punctuation between words will break it. Drop generic words (HOSPITAL, MEDICAL, CENTER, ST) from matching.
+- Filings may use an acronym OR the spelled-out name (OHSU HOSPITAL AND CLINICS vs OREGON HEALTH & SCIENCE UNIVERSITY). When the user gives an acronym or short name, OR both forms: (hospital_name ILIKE '%OHSU%' OR (hospital_name ILIKE '%OREGON%' AND hospital_name ILIKE '%SCIENCE%')).
 - state_code is the 2-letter state abbreviation, also uppercase (e.g. 'OR').
 - Dollar fields are whole dollars. Bed/day/discharge fields are counts.
 - report_year is the cost reporting year (currently the latest available from CMS; cost reports trail real time by 1-2 years).
