@@ -271,7 +271,7 @@ import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0
 
 // Bump on every deploy — shown in the input hint and About footer so a stale
 // cached page is identifiable at a glance.
-const APP_VERSION = "1.2.1";
+const APP_VERSION = "1.2.2";
 console.log("AskCostReports v" + APP_VERSION);
 
 // jsDelivr fronts the GitHub data branch with a real CDN (survives traffic
@@ -554,7 +554,15 @@ async function send(text) {
       totalInput += fixResp.usage.input_tokens || 0;
       totalOutput += fixResp.usage.output_tokens || 0;
       const fixedSql = stripFences(fixResp.text);
-      queryResult = await runQuery(fixedSql);
+      try {
+        queryResult = await runQuery(fixedSql);
+      } catch (secondErr) {
+        // Never surface a raw DuckDB error to the user (e.g. the model
+        // returning refusal prose instead of SQL on an off-topic/injection
+        // attempt) — always fail into a friendly, on-brand message.
+        reportError("sql-retry-failed", secondErr);
+        throw new Error("I couldn't turn that into a data query. Try asking about a specific hospital's costs, revenue, staffing, or finances.");
+      }
       conversationHistory[conversationHistory.length - 1].content = fixedSql;
     }
 
