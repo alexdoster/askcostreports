@@ -28,7 +28,7 @@ const MAX_SCHEMA_CHARS = 8000;
 // a general-purpose proxy by spoofing Origin and supplying a custom prompt.
 const DATA_RULES = `DATA RULES:
 - Table: costreports. Grain: one row per hospital per report_year (provider_ccn + report_year).
-- Hospital names are UPPERCASE; always match with ILIKE '%NAME%' (e.g. hospital_name ILIKE '%LEGACY GOOD SAMARITAN%').
+- Hospital names are UPPERCASE with inconsistent punctuation and abbreviation (ST vs ST., MEDICAL CENTER vs MED CTR). Match each distinctive word with its own ILIKE, ANDed together: hospital_name ILIKE '%LEGACY%' AND hospital_name ILIKE '%SAMARITAN%'. NEVER put multiple words inside one ILIKE pattern — punctuation between words will break it. Drop generic words (HOSPITAL, MEDICAL, CENTER, ST) from matching.
 - state_code is the 2-letter state abbreviation, also uppercase (e.g. 'OR').
 - Dollar fields are whole dollars. Bed/day/discharge fields are counts.
 - report_year is the cost reporting year (currently the latest available from CMS; cost reports trail real time by 1-2 years).
