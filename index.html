@@ -37,6 +37,11 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 .about-links a:hover{text-decoration:underline}
 .about-foot{font-size:11.5px;color:#888780;font-family:-apple-system,sans-serif}
 .about-foot a{color:#1d3a52}
+.bd-hosp{font-size:12.5px;color:#0F6E56;font-weight:600;font-family:-apple-system,sans-serif;margin-bottom:12px}
+.bd-row{display:flex;justify-content:space-between;gap:14px;padding:3px 0;font-size:12.5px;font-family:-apple-system,sans-serif;border-bottom:1px solid #f4f2ec}
+.bd-row:last-child{border-bottom:none}
+.bd-lbl{color:#4a4a46}
+.bd-val{color:#1d3a52;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
 .body{display:flex;flex:1;overflow:hidden;width:100%;max-width:1440px;margin:0 auto;border-left:1px solid #e6e3dc;border-right:1px solid #e6e3dc}
 @media (max-width:1470px){.body{border-left:none;border-right:none}}
 .sidebar{width:280px;background:#fff;border-right:1px solid #e0ddd6;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
@@ -126,6 +131,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
     <div style="color:#93aec4;font-family:-apple-system,sans-serif;font-size:11.5px" id="hdr-sub">Every Medicare-certified US hospital · Connected to AI · Free</div>
   </div>
   <div style="display:flex;align-items:center;gap:16px">
+    <a class="hdr-link" href="#" onclick="showBrowse();return false">Browse the data</a>
     <a class="hdr-link" href="#" onclick="showAbout();return false">About the data</a>
     <div class="pill loading" id="status-pill">● Loading...</div>
   </div>
@@ -163,6 +169,17 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
   </div>
 </div>
 
+<div class="about-overlay" id="browse-overlay" style="display:none" onclick="if(event.target===this)hideBrowse()">
+  <div class="about-modal">
+    <div class="about-head">
+      <div class="about-title">Browse the data</div>
+      <button class="about-close" onclick="hideBrowse()">✕</button>
+    </div>
+    <p style="font-size:13px;color:#3d3d3a;line-height:1.65;font-family:-apple-system,sans-serif;margin-bottom:12px">Every hospital's filing has these fields — this is what you can ask about. Values shown are one real filing, so you can see what the data looks like.</p>
+    <div id="browse-body"><p class="load-status">Loading…</p></div>
+  </div>
+</div>
+
 <div class="body">
   <div class="sidebar">
     <div class="sb-head">
@@ -187,6 +204,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
         <div style="background:#fff;border:1px solid #e0ddd6;border-radius:8px;padding:14px 18px;text-align:left;margin-bottom:16px;font-family:-apple-system,sans-serif;font-size:13px;color:#3d3d3a;line-height:1.8">
           <div style="font-weight:600;color:#1d3a52;margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.06em">Dataset</div>
           <div id="ds-stats">· Loading dataset details...</div>
+          <div style="margin-top:8px"><a href="#" onclick="showBrowse();return false" style="color:#0F6E56;font-weight:600;text-decoration:none;font-size:12.5px">Browse every field, with a real hospital's filing as the example →</a></div>
         </div>
         <div class="topic-grid">
           <div class="topic-card" style="border-color:#1d3a5230;background:#1d3a5208" onclick="toggleCat('lookup','#1d3a52',document.querySelector('[data-cat=lookup]'))">
@@ -635,6 +653,73 @@ function newConv() {
 window.onKey = onKey; window.doSend = doSend; window.newConv = newConv;
 window.showAbout = () => { document.getElementById("about-overlay").style.display = "flex"; };
 window.hideAbout = () => { document.getElementById("about-overlay").style.display = "none"; };
+
+// ── Browse the data (field explorer with a real filing) ────────
+const FIELD_GROUPS = [{"title": "Hospital & filing", "note": "Who and where, plus the filing period", "cols": ["report_year", "rpt_rec_num", "provider_ccn", "hospital_name", "street_address", "city", "state_code", "zip_code", "county", "medicare_cbsa_number", "rural_versus_urban", "ccn_facility_type", "provider_type", "type_of_control", "fiscal_year_begin_date", "fiscal_year_end_date"]}, {"title": "Beds, patients & volume", "note": "Size and utilization, split by payer program", "cols": ["total_days_title_v", "total_days_title_xviii", "total_days_title_xix", "total_days_v_xviii_xix_unknown", "number_of_beds", "total_bed_days_available", "total_discharges_title_v", "total_discharges_title_xviii", "total_discharges_title_xix", "total_discharges_v_xviii_xix_unknown", "number_of_beds_total_for_all_subproviders", "hospital_total_days_title_v_for_adults_peds", "hospital_total_days_title_xviii_for_adults_peds", "hospital_total_days_title_xix_for_adults_peds", "hospital_total_days_v_xviii_xix_unknown_for_adults_peds", "hospital_number_of_beds_for_adults_peds", "hospital_total_bed_days_available_for_adults_peds", "hospital_total_discharges_title_v_for_adults_peds", "hospital_total_discharges_title_xviii_for_adults_peds", "hospital_total_discharges_title_xix_for_adults_peds", "hospital_total_discharges_v_xviii_xix_unknown_for_adults_peds"]}, {"title": "Charity care & uncompensated care", "note": "What the hospital absorbed", "cols": ["cost_of_charity_care", "total_bad_debt_expense", "cost_of_uncompensated_care", "total_unreimbursed_and_uncompensated_care"]}, {"title": "Staffing & labor", "note": "Payroll, FTEs, and contract labor", "cols": ["fte_employees_on_payroll", "number_of_interns_and_residents_fte", "total_salaries_from_worksheet_a", "wage_related_costs_core", "wage_related_costs_rhc_fqhc", "total_salaries_adjusted", "contract_labor_direct_patient_care", "wage_related_costs_for_part_a_teaching_physicians", "wage_related_costs_for_interns_and_residents"]}, {"title": "Income statement", "note": "Revenue, costs, and the bottom line", "cols": ["overhead_non_salary_costs", "depreciation_cost", "total_costs", "inpatient_total_charges", "outpatient_total_charges", "combined_outpatient_inpatient_total_charges", "inpatient_revenue", "outpatient_revenue", "total_patient_revenue", "less_contractual_allowance_and_discounts_on_patients_accounts", "net_patient_revenue", "less_total_operating_expense", "net_income_from_service_to_patients", "total_other_income", "total_income", "total_other_expenses", "net_income", "cost_to_charge_ratio"]}, {"title": "Balance sheet", "note": "Assets, liabilities, and fund balances", "cols": ["cash_on_hand_and_in_banks", "temporary_investments", "notes_receivable", "accounts_receivable", "less_allowances_for_uncollectible_notes_and_accounts_receivable", "inventory", "prepaid_expenses", "other_current_assets", "total_current_assets", "land", "land_improvements", "buildings", "leasehold_improvements", "fixed_equipment", "major_movable_equipment", "minor_equipment_depreciable", "health_information_technology_designated_assets", "total_fixed_assets", "investments", "other_assets", "total_other_assets", "total_assets", "accounts_payable", "salaries_wages_and_fees_payable", "payroll_taxes_payable", "notes_and_loans_payable_short_term", "deferred_income", "other_current_liabilities", "total_current_liabilities", "mortgage_payable", "notes_payable", "unsecured_loans", "other_long_term_liabilities", "total_long_term_liabilities", "total_liabilities", "general_fund_balance", "total_fund_balances", "total_liabilities_and_fund_balances"]}, {"title": "Medicare & Medicaid payment detail", "note": "DRG, DSH, IME, and Medicaid/CHIP specifics", "cols": ["drg_amounts_other_than_outlier_payments", "drg_amounts_before_october_1", "drg_amounts_after_october_1", "outlier_payments_for_discharges", "disproportionate_share_adjustment", "allowable_dsh_percentage", "managed_care_simulated_payments", "total_ime_payment", "net_revenue_from_medicaid", "medicaid_charges", "net_revenue_from_stand_alone_chip", "stand_alone_chip_charges"]}];
+
+const FIELD_ACRONYMS = { fte: "FTE", ccn: "CCN", cbsa: "CBSA", drg: "DRG", dsh: "DSH", ime: "IME", chip: "CHIP", rhc: "RHC", fqhc: "FQHC", peds: "peds" };
+function prettyField(col) {
+  let s = col
+    .replace(/_v_xviii_xix_unknown/g, "_all payers")
+    .replace(/title_xviii/g, "Medicare")
+    .replace(/title_xix/g, "Medicaid")
+    .replace(/title_v/g, "Title V")
+    .replace(/for_adults_peds/g, "(adults & peds)");
+  s = s.split("_").map(w => FIELD_ACRONYMS[w] || w).join(" ");
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+const COUNT_FIELDS = /beds|days|discharges|^fte_|_fte$|report_year|provider_type|type_of_control|rpt_rec_num|medicare_cbsa_number/;
+function fmtFieldVal(col, v, groupIdx) {
+  if (v === null || v === undefined || v === "") return "—";
+  if (col === "rural_versus_urban") return v === "R" ? "Rural" : v === "U" ? "Urban" : String(v);
+  if (col.endsWith("_date")) {
+    if (v instanceof Date) return v.toISOString().slice(0, 10);
+    const d = new Date(Number(v) || v);
+    return isNaN(d) ? String(v) : d.toISOString().slice(0, 10);
+  }
+  if (col === "cost_to_charge_ratio") return Number(v).toFixed(3);
+  if (col === "allowable_dsh_percentage") return Number(v).toFixed(2);
+  if (typeof v === "bigint" || typeof v === "number") {
+    const n = Number(v);
+    if (groupIdx === 0 || COUNT_FIELDS.test(col)) return n.toLocaleString(undefined, { maximumFractionDigits: 1 });
+    const sign = n < 0 ? "-" : "";
+    const a = Math.abs(n);
+    if (a >= 1e6) return `${sign}$${(a / 1e6).toLocaleString(undefined, { maximumFractionDigits: 1 })}M`;
+    return `${sign}$${a.toLocaleString()}`;
+  }
+  return String(v);
+}
+
+let browseBuilt = false;
+window.hideBrowse = () => { document.getElementById("browse-overlay").style.display = "none"; };
+window.showBrowse = async () => {
+  document.getElementById("browse-overlay").style.display = "flex";
+  if (browseBuilt) return;
+  const el = document.getElementById("browse-body");
+  if (!db || !conn) { el.innerHTML = '<p class="load-status">The data is still loading — try again in a few seconds.</p>'; return; }
+  try {
+    let r = await runQuery("SELECT * FROM costreports WHERE hospital_name ILIKE '%LEGACY GOOD SAMARITAN%' ORDER BY report_year DESC LIMIT 1");
+    if (!r.rows.length) r = await runQuery("SELECT * FROM costreports ORDER BY report_year DESC LIMIT 1");
+    const row = r.rows[0];
+    const claimed = new Set();
+    let html = `<div class="bd-hosp">Example filing: ${esc(row.hospital_name)}, ${esc(row.report_year)}</div>`;
+    const renderGroup = (title, note, cols, gi) => {
+      const rows = cols.filter(c => c in row);
+      if (!rows.length) return "";
+      return `<div class="about-sec"><h4>${esc(title)}</h4><p style="margin-bottom:4px">${esc(note)}</p>` +
+        rows.map(c => { claimed.add(c); return `<div class="bd-row"><span class="bd-lbl">${esc(prettyField(c))}</span><span class="bd-val">${esc(fmtFieldVal(c, row[c], gi))}</span></div>`; }).join("") + `</div>`;
+    };
+    FIELD_GROUPS.forEach((g, gi) => { html += renderGroup(g.title, g.note, g.cols, gi); });
+    const leftovers = Object.keys(row).filter(c => !claimed.has(c));
+    if (leftovers.length) html += renderGroup("More fields", "Newer additions from CMS", leftovers, 4);
+    el.innerHTML = html;
+    browseBuilt = true;
+  } catch (e) {
+    el.innerHTML = '<p class="load-status">Could not load the example filing. Close and try again.</p>';
+    reportError("browse", e);
+  }
+};
 
 // ── Startup: auto-load, no gate ────────────────────────────────
 (async function startup() {
