@@ -172,7 +172,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
       <a href="https://github.com/alexdoster/askcostreports" target="_blank" rel="noopener">Open source — inspect the code ↗</a>
       <a href="https://alexdoster.github.io/Portfolio" target="_blank" rel="noopener">Contact the developer ↗</a>
     </div>
-    <div class="about-foot">Built by <a href="https://alexdoster.github.io/Portfolio" target="_blank" rel="noopener">Alex Doster</a> · Portland, OR</div>
+    <div class="about-foot">Built by <a href="https://alexdoster.github.io/Portfolio" target="_blank" rel="noopener">Alex Doster</a> · Portland, OR · <span id="about-ver"></span></div>
   </div>
 </div>
 
@@ -248,6 +248,11 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 
 <script type="module">
 import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
+
+// Bump on every deploy — shown in the input hint and About footer so a stale
+// cached page is identifiable at a glance.
+const APP_VERSION = "1.0.0";
+console.log("AskCostReports v" + APP_VERSION);
 
 // jsDelivr fronts the GitHub data branch with a real CDN (survives traffic
 // spikes raw.githubusercontent may throttle); raw is the fallback.
@@ -375,7 +380,7 @@ async function loadData(setStatus, setBar) {
   document.getElementById("hdr-sub").textContent =
     `Every Medicare-certified US hospital ${yrs[0]}–${yrs[yrs.length - 1]} · Connected to AI · Free`;
   document.getElementById("inp-hint").textContent =
-    `Press Enter to send · Data through ${yrs[yrs.length - 1]} — cost reports trail real time by 1–2 years`;
+    `Press Enter to send · Data through ${yrs[yrs.length - 1]} — cost reports trail real time by 1–2 years · v${APP_VERSION}`;
   document.getElementById("about-fresh").textContent =
     `Currently loaded: ${yrs[0]}–${yrs[yrs.length - 1]}, ${Number(MANIFEST.total_rows).toLocaleString()} hospital-year filings.`;
 
@@ -686,6 +691,7 @@ function newConv() {
   document.getElementById("new-btn").style.display = "none";
 }
 window.onKey = onKey; window.doSend = doSend; window.newConv = newConv;
+document.getElementById("about-ver").textContent = "v" + APP_VERSION;
 window.showAbout = () => { document.getElementById("about-overlay").style.display = "flex"; };
 window.hideAbout = () => { document.getElementById("about-overlay").style.display = "none"; };
 
