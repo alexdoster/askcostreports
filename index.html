@@ -271,7 +271,7 @@ import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0
 
 // Bump on every deploy — shown in the input hint and About footer so a stale
 // cached page is identifiable at a glance.
-const APP_VERSION = "1.2.0";
+const APP_VERSION = "1.2.1";
 console.log("AskCostReports v" + APP_VERSION);
 
 // jsDelivr fronts the GitHub data branch with a real CDN (survives traffic
@@ -461,7 +461,13 @@ async function claudeCall(mode, messages, maxTokens = 800) {
   } catch {
     const e = new Error("NETWORK_BLOCKED"); e.isNetworkError = true; throw e;
   }
-  const data = await res.json();
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    // Non-JSON response (edge error page etc.) — surface as a friendly retry
+    throw new Error("The AI service is temporarily busy. Give it a moment and try again.");
+  }
   if (data.error) { const e = new Error(data.error.message); e.code = data.error.code; throw e; }
   if (data.usage) {
     sessionInputTokens += data.usage.input_tokens || 0;
@@ -615,7 +621,7 @@ const SAVED_RESULTS = [];
 function toCSV(schema, rows) {
   const cell = v => {
     const s = v === null || v === undefined ? "" : String(v);
-    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   return schema.map(cell).join(",") + "\n" +
     rows.map(r => schema.map(c => cell(r[c])).join(",")).join("\n");
@@ -751,9 +757,19 @@ function doSend() {
   }
   send(v);
 }
+// Captured once data has loaded, so New Conversation can restore the full
+// welcome screen (topic cards + mobile question mirror) instead of a stub
+let initialWelcomeHTML = "";
 function newConv() {
   conversationHistory = [];
-  document.getElementById("messages").innerHTML = '<div class="welcome" id="welcome"><h2>What would you like to know?</h2><p>Ask about any US hospital\'s costs, margins, staffing, charity care, or balance sheet.</p></div>';
+  activeCat = null;
+  document.getElementById("messages").innerHTML = initialWelcomeHTML ||
+    '<div class="welcome" id="welcome"><h2>What would you like to know?</h2><p>Ask about any US hospital\'s costs, margins, staffing, charity care, or balance sheet.</p></div>';
+  document.querySelectorAll(".cat-btn").forEach(b => {
+    b.style.borderColor = ""; b.style.background = ""; b.style.color = "";
+    const ch = b.querySelector(".chev"); if (ch) { ch.textContent = "▸"; ch.style.color = ""; }
+  });
+  document.querySelectorAll(".q-slot").forEach(s => { s.innerHTML = ""; });
   document.getElementById("new-btn").style.display = "none";
 }
 window.onKey = onKey; window.doSend = doSend; window.newConv = newConv;
@@ -809,6 +825,10 @@ window.showBrowse = async () => {
     let r = await runQuery("SELECT * FROM costreports WHERE hospital_name ILIKE '%LEGACY GOOD SAMARITAN%' ORDER BY report_year DESC LIMIT 1");
     if (!r.rows.length) r = await runQuery("SELECT * FROM costreports ORDER BY report_year DESC LIMIT 1");
     const row = r.rows[0];
+    if (!row) {
+      el.innerHTML = '<p class="load-status">No data available yet. Close and try again in a moment.</p>';
+      return;
+    }
     const claimed = new Set();
     let html = `<div class="bd-hosp">Example filing: ${esc(row.hospital_name)}, ${esc(row.report_year)}</div>`;
     const renderGroup = (title, note, cols, gi) => {
@@ -839,6 +859,7 @@ if (MOBILE) document.getElementById("inp").placeholder = "Ask about hospital fin
     setStatus("Starting analytics engine...");
     await initDuckDB();
     await loadData(setStatus, setBar);
+    initialWelcomeHTML = document.getElementById("messages").innerHTML;
     const lo = document.getElementById("load-overlay");
     lo.classList.add("done");
     setTimeout(() => { lo.style.display = "none"; }, 500);
