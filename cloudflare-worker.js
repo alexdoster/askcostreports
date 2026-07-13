@@ -47,6 +47,14 @@ export default {
       }
     }
 
+    // Browser-side crash reports: the app beacons here so client-only bugs
+    // (like a response-parsing error) are visible in Workers Logs.
+    if (new URL(request.url).pathname === "/client-error") {
+      const payload = (await request.text()).slice(0, 1000);
+      console.error("CLIENT_ERROR", payload);
+      return new Response(null, { status: 204, headers: cors });
+    }
+
     let body;
     try {
       body = await request.json();
@@ -80,6 +88,7 @@ export default {
     // render. A blown monthly budget is a success signal, not a crash.
     if (!anthropicResp.ok) {
       const msg = (data && data.error && data.error.message) || "";
+      console.error("UPSTREAM_ERROR", anthropicResp.status, msg.slice(0, 300));
       if (/credit|billing|balance|spend/i.test(msg)) {
         return json({ error: { code: "budget", message: "monthly budget reached" } }, 503, cors);
       }

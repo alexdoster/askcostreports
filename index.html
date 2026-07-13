@@ -357,6 +357,20 @@ async function loadData(setStatus, setBar) {
 let sessionInputTokens = 0, sessionOutputTokens = 0;
 function calcCost(i, o) { return (i / 1e6) * 3.0 + (o / 1e6) * 15.0; }
 
+// Fire-and-forget crash reporting to the Worker so browser-only bugs show up
+// in Cloudflare's Workers Logs. No user data — just the error and browser info.
+function reportError(context, err) {
+  try {
+    navigator.sendBeacon(WORKER_URL + "/client-error", JSON.stringify({
+      context,
+      message: String((err && err.message) || err).slice(0, 300),
+      ua: navigator.userAgent.slice(0, 150)
+    }));
+  } catch { /* never let error reporting cause errors */ }
+}
+window.addEventListener("error", e => reportError("window", e.message));
+window.addEventListener("unhandledrejection", e => reportError("promise", e.reason));
+
 async function claudeCall(system, messages, maxTokens = 800) {
   let res;
   try {
@@ -477,6 +491,7 @@ async function send(text) {
     } else if (err.isNetworkError) {
       addErrorMsg("This network may be blocking external API connections. Try a different network or mobile hotspot.");
     } else {
+      reportError("send", err);
       addErrorMsg(err.message || "An error occurred. Please try again.");
     }
   }

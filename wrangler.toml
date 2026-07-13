@@ -2,6 +2,11 @@ name = "askcostreports-proxy"
 main = "cloudflare-worker.js"
 compatibility_date = "2026-06-01"
 
+# Workers Logs: makes console.error visible in the Cloudflare dashboard
+# (Workers & Pages -> askcostreports-proxy -> Logs). Free tier retains logs.
+[observability]
+enabled = true
+
 # Native Workers rate limiting: 20 requests/min per client IP.
 [[unsafe.bindings]]
 name = "RATE_LIMITER"
