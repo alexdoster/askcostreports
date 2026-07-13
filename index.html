@@ -115,6 +115,8 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 .sql-toggle:hover{color:#1d3a52}
 .sql-collapsible{display:none}
 .data-note{font-size:11px;color:#aaa9a2;font-family:-apple-system,sans-serif;margin-top:16px;line-height:1.6}
+#welcome-qs{display:none;text-align:left;margin-top:14px}
+@media (max-width:720px){#welcome-qs{display:block}#welcome-qs .q-btn{font-size:13px;padding:9px 10px}}
 @media (max-width:720px){.sidebar{display:none}.messages{padding:16px}.bubble{max-width:92%}}
 </style>
 </head>
@@ -229,6 +231,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
             <div style="font-size:11px;color:#888780;margin-top:3px;font-family:-apple-system,sans-serif">Uncompensated care, contract labor</div>
           </div>
         </div>
+        <div id="welcome-qs"></div>
         <div class="data-note">Data: CMS Hospital Provider Cost Report (public domain), as filed by hospitals. Cost reports trail real time by 1–2 years — that's the nature of the filing cycle, and every analytics vendor works from the same publications. Refreshed automatically when CMS publishes.</div>
       </div>
     </div>
@@ -636,14 +639,19 @@ function toggleCat(cat, color, btn) {
     const ch = b.querySelector(".chev"); if (ch) { ch.textContent = "▸"; ch.style.color = ""; }
   });
   document.querySelectorAll(".q-slot").forEach(s => { s.innerHTML = ""; });
-  if (activeCat === cat) { activeCat = null; return; }
+  const wq = document.getElementById("welcome-qs");
+  if (activeCat === cat) { activeCat = null; if (wq) wq.innerHTML = ""; return; }
   activeCat = cat;
   btn.style.borderColor = color; btn.style.background = color + "14"; btn.style.color = color;
   const ch = btn.querySelector(".chev"); if (ch) { ch.textContent = "▾"; ch.style.color = color; }
-  document.getElementById("qs-" + cat).innerHTML =
+  const listHTML =
     `<div class="q-list" style="border-left-color:${color}">` + QUESTIONS[cat].map(q =>
       `<button class="q-btn" onclick="window._ask(this)" ${loading || !db ? "disabled" : ""}>${q}</button>`
     ).join("") + "</div>";
+  document.getElementById("qs-" + cat).innerHTML = listHTML;
+  // Mirror into the welcome screen — on phones the sidebar is hidden, so this
+  // is the only place tapped topic cards can show their questions.
+  if (wq) wq.innerHTML = listHTML;
 }
 
 window._ask = (btn) => send(btn.textContent);
