@@ -735,6 +735,9 @@ window.showBrowse = async () => {
 };
 
 // ── Startup: auto-load, no gate ────────────────────────────────
+// Short copy where narrow screens clip the long versions
+const MOBILE = window.matchMedia("(max-width: 720px)").matches;
+if (MOBILE) document.getElementById("inp").placeholder = "Ask about hospital finances...";
 (async function startup() {
   const setStatus = m => { document.getElementById("load-status").textContent = m; };
   const setBar = p => { document.getElementById("load-bar").style.width = p + "%"; };
@@ -745,7 +748,7 @@ window.showBrowse = async () => {
     const lo = document.getElementById("load-overlay");
     lo.classList.add("done");
     setTimeout(() => { lo.style.display = "none"; }, 500);
-    document.getElementById("status-pill").textContent = "● Ready — data loaded locally";
+    document.getElementById("status-pill").textContent = MOBILE ? "● Ready" : "● Ready — data loaded locally";
     document.getElementById("status-pill").className = "pill ready";
     document.getElementById("inp").disabled = false;
     document.getElementById("send").disabled = false;
