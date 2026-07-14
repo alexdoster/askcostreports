@@ -287,11 +287,9 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 </div>
 
 <script type="module">
-import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
-
 // Bump on every deploy — shown in the input hint and About footer so a stale
 // cached page is identifiable at a glance.
-const APP_VERSION = "1.2.8";
+const APP_VERSION = "1.2.9";
 console.log("AskCostReports v" + APP_VERSION);
 
 // jsDelivr fronts the GitHub data branch with a real CDN (survives traffic
@@ -369,7 +367,18 @@ const QUESTIONS = {
 };
 
 // ── DuckDB init & data load ────────────────────────────────────
+function networkBlockedError() {
+  const e = new Error("NETWORK_BLOCKED"); e.isNetworkError = true; return e;
+}
+
 async function initDuckDB() {
+  // Dynamic import (not a static top-level import) so a blocked jsDelivr
+  // request throws a catchable error here instead of failing the whole
+  // module before any of this file's code — including error handling — runs.
+  let duckdb;
+  try {
+    duckdb = await import("https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm");
+  } catch { throw networkBlockedError(); }
   const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
   const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
   const worker_url = URL.createObjectURL(
@@ -391,7 +400,7 @@ async function loadData(setStatus, setBar) {
       if (mResp.ok) { DATA_BASE = base; break; }
     } catch { /* try next base */ }
   }
-  if (!mResp || !mResp.ok) throw new Error("Could not fetch data manifest");
+  if (!mResp || !mResp.ok) throw networkBlockedError();
   MANIFEST = await mResp.json();
 
   // Fetch all years in parallel — 13 sequential round trips was the slowest
@@ -410,7 +419,7 @@ async function loadData(setStatus, setBar) {
         if (resp.ok) return resp;
       } catch { /* timed out or network error — try the next host */ }
     }
-    throw new Error(`Failed to fetch ${f} from all data hosts`);
+    throw networkBlockedError();
   }
   const files = MANIFEST.files;
   let done = 0;
@@ -478,9 +487,7 @@ async function claudeCall(mode, messages, maxTokens = 800) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ mode, schema: mode === "sql" ? SCHEMA_TEXT : undefined, max_tokens: maxTokens, messages })
     });
-  } catch {
-    const e = new Error("NETWORK_BLOCKED"); e.isNetworkError = true; throw e;
-  }
+  } catch { throw networkBlockedError(); }
   let data;
   try {
     data = await res.json();
@@ -897,7 +904,12 @@ if (MOBILE) document.getElementById("inp").placeholder = "Ask about hospital fin
     document.getElementById("send").disabled = false;
     document.getElementById("inp").focus();
   } catch (err) {
-    setStatus("Error: " + err.message + " — refresh to retry.");
+    if (err.isNetworkError) {
+      setStatus("This network appears to be blocking external resources needed to load the data engine. Try a different network, a mobile hotspot, or a personal device.");
+    } else {
+      reportError("startup", err);
+      setStatus("Error: " + err.message + " — refresh to retry.");
+    }
     document.getElementById("status-pill").textContent = "● Error";
     document.getElementById("status-pill").className = "pill error";
   }
