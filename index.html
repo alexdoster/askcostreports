@@ -289,7 +289,7 @@ body{font-family:Georgia,'Times New Roman',serif;background:#f7f6f3;height:100vh
 <script type="module">
 // Bump on every deploy — shown in the input hint and About footer so a stale
 // cached page is identifiable at a glance.
-const APP_VERSION = "1.2.9";
+const APP_VERSION = "1.3.0";
 console.log("AskCostReports v" + APP_VERSION);
 
 // jsDelivr fronts the GitHub data branch with a real CDN (survives traffic
@@ -299,7 +299,11 @@ const DATA_BASES = [
   "https://raw.githubusercontent.com/alexdoster/askcostreports/data/"
 ];
 let DATA_BASE = DATA_BASES[0];
-const WORKER_URL = "https://askcostreports-proxy.alex80ad.workers.dev";
+// Custom domain, not the shared workers.dev domain — some corporate secure
+// web gateways block workers.dev by shared-domain reputation regardless of
+// what the specific worker does. api.askcostreports.com inherits our own
+// domain's reputation instead. (workers.dev route is still live as a backup.)
+const WORKER_URL = "https://api.askcostreports.com";
 
 let db = null, conn = null, loading = false, activeCat = null;
 let conversationHistory = [];

@@ -2,6 +2,19 @@ name = "askcostreports-proxy"
 main = "cloudflare-worker.js"
 compatibility_date = "2026-06-01"
 
+# Explicit: keep the workers.dev URL live too (current production client
+# still points at it) rather than relying on default deploy behavior, which
+# a wrangler warning said would disable it if left unset.
+workers_dev = true
+
+# Custom domain instead of the shared workers.dev domain: some corporate
+# secure web gateways block workers.dev by shared-domain reputation/category
+# regardless of what the specific worker does. This inherits our own
+# domain's reputation instead.
+[[routes]]
+pattern = "api.askcostreports.com"
+custom_domain = true
+
 # Workers Logs: makes console.error visible in the Cloudflare dashboard
 # (Workers & Pages -> askcostreports-proxy -> Logs). Free tier retains logs.
 [observability]
