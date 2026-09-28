@@ -1,0 +1,34 @@
+{
+  "dataset": "Hospital Provider Cost Report",
+  "years": [
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+  ],
+  "total_rows": 80077,
+  "files": [
+    "costreport_2011.parquet",
+    "costreport_2012.parquet",
+    "costreport_2013.parquet",
+    "costreport_2014.parquet",
+    "costreport_2015.parquet",
+    "costreport_2016.parquet",
+    "costreport_2017.parquet",
+    "costreport_2018.parquet",
+    "costreport_2019.parquet",
+    "costreport_2020.parquet",
+    "costreport_2021.parquet",
+    "costreport_2022.parquet",
+    "costreport_2023.parquet"
+  ]
+}
